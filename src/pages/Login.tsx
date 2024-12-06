@@ -7,11 +7,13 @@ import {
   redirectToAuthCodeFlow,
 } from "../utils/spotifyAuth";
 
+// Assume `getAccessToken`, `fetchProfile`, and `redirectToAuthCodeFlow` are available utility functions
+
 const Login: React.FC = () => {
   const navigate = useNavigate();
   const { setUser } = useUser(); // Access setUser function from context
 
-  const clientId = "ddfd97f98dbd402788670fc5a2a118bf";
+  const clientId = "ddfd97f98dbd402788670fc5a2a118bf"; // Your Spotify client ID
 
   useEffect(() => {
     const handleLogin = async () => {
@@ -19,18 +21,22 @@ const Login: React.FC = () => {
       const code = params.get("code");
 
       if (!code) {
-        redirectToAuthCodeFlow(clientId); // Redirect to Spotify for login
+        // If no code is present, redirect to Spotify for login
+        redirectToAuthCodeFlow(clientId);
       } else {
         try {
-          // Exchange authorization code for access token
+          // Exchange the authorization code for an access token
           const accessToken = await getAccessToken(clientId, code);
+
+          // Fetch the user's profile information using the access token
           const profile = await fetchProfile(accessToken);
 
+          // Store the user data and access token in the context
           setUser({
-            // Set the user data in context
             name: profile.display_name,
-            avatar: profile.images[0]?.url || "https://via.placeholder.com/40",
+            avatar: profile.images[0]?.url || "https://via.placeholder.com/40", // Default avatar if not available
             points: 50, // Example default value, modify as needed
+            accessToken, // Store the access token in the context as well
           });
 
           // Redirect to the home page after successful login
@@ -42,7 +48,7 @@ const Login: React.FC = () => {
     };
 
     handleLogin();
-  }, [navigate, setUser]);
+  }, [navigate, setUser, clientId]); // clientId can also be moved to useState if it's dynamic
 
   return (
     <div style={{ textAlign: "center", marginTop: "20%" }}>

@@ -5,6 +5,7 @@ interface User {
   name: string;
   avatar: string;
   points: number;
+  accessToken: string | null; // Add accessToken to the User interface
 }
 
 // Create the context with a default value of null
