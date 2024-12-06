@@ -41,7 +41,7 @@ export function getRandomTrack(tracks: Track[]): Track {
 
 export function generateTrackQuestion(track: Track) {
   const questionTypes = ["release_date", "artist", "popularity", "album_cover"];
-  const questionType = questionTypes[3];
+  const questionType = questionTypes[3]; // THIS IS WHERE WE SET QUESTION TYPESSSSSSSSSSSS
 
   let question: string = "",
     correctAnswer: string | number = "";
