@@ -100,9 +100,10 @@ const MenuButton = styled.button`
 
 interface Question {
   text: string;
-  choices: string[]; // Ensure choices are strings (image URLs)
+  choices: string[]; // Ensure choices are strings (image URLs or text)
   correctIndex: number;
   track?: any; // Optional: Track data if needed
+  questionType: string; // Add the question type (e.g., 'album_cover', 'artist', etc.)
 }
 
 const Questionnaire: React.FC = () => {
@@ -154,6 +155,7 @@ const Questionnaire: React.FC = () => {
               choices: textOptions, // Set the choices as text-only options (string[])
               correctIndex: textOptions.indexOf(String(correctAnswer)), // Ensure correctAnswer is a string
               track, // Optional: you can store the track data here for additional use
+              questionType, // Add the questionType here
             };
           })
         );
@@ -212,8 +214,12 @@ const Questionnaire: React.FC = () => {
                   isSelected={selected === index}
                   isCorrect={index === questions[currentQuestion].correctIndex}
                 >
-                  <img src={choice} alt={`Choice ${index}`} />{" "}
-                  {/* Display the image */}
+                  {/* Handle question type to render images or text */}
+                  {questions[currentQuestion].questionType === "album_cover" ? (
+                    <img src={choice} alt={`Choice ${index}`} /> // Display image for album cover questions
+                  ) : (
+                    <span>{choice}</span> // Display text for other question types
+                  )}
                 </ChoiceButton>
               ))}
             </div>
