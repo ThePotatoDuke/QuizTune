@@ -1,7 +1,12 @@
 /*This page is not needed anymore*/
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import {
+  fetchProfile,
+  getAccessToken,
+  redirectToAuthCodeFlow,
+} from "../utils/spotifyAuth";
 
 interface LoginFormInputs {
   username: string;
@@ -9,41 +14,43 @@ interface LoginFormInputs {
 }
 
 const Login: React.FC = () => {
-  const { register, handleSubmit, formState: { errors } } = useForm<LoginFormInputs>();
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Initialize the navigate function
+  const clientId = "ddfd97f98dbd402788670fc5a2a118bf";
 
-  const onSubmit = (data: LoginFormInputs) => {
-    console.log("User Login Data: ", data);
-    // Simulate login logic
-    if (data.username === "admin" && data.password === "password") {
-      navigate("/home");
-    } else {
-      alert("Invalid credentials.");
-    }
-  };
+  useEffect(() => {
+    const handleLogin = async () => {
+      const params = new URLSearchParams(window.location.search);
+      const code = params.get("code");
+
+      if (!code) {
+        // No authorization code, redirect to Spotify for login
+        redirectToAuthCodeFlow(clientId);
+      } else {
+        try {
+          // Authorization code present, exchange for access token
+          const accessToken = await getAccessToken(clientId, code);
+          const profile = await fetchProfile(accessToken);
+
+          console.log(profile); // Logs profile data to the console
+
+          // Display a random favorite track (implement your logic in randomTrackQuestion)
+          //await randomTrackQuestion(accessToken);
+
+          // Navigate to the home page after successful authentication
+          navigate("/home"); // Navigates to the /home route
+        } catch (error) {
+          console.error("Error during authentication process:", error);
+        }
+      }
+    };
+
+    handleLogin();
+  }, [navigate]); // Add navigate to the dependency array
 
   return (
-    <div style={{ maxWidth: "400px", margin: "50px auto", textAlign: "center" }}>
-      <h2>Spofued Login</h2>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div style={{ marginBottom: "10px" }}>
-          <label>Username:</label>
-          <input
-            type="text"
-            {...register("username", { required: "Username is required" })}
-          />
-          {errors.username && <p style={{ color: "red" }}>{errors.username.message}</p>}
-        </div>
-        <div style={{ marginBottom: "10px" }}>
-          <label>Password:</label>
-          <input
-            type="password"
-            {...register("password", { required: "Password is required" })}
-          />
-          {errors.password && <p style={{ color: "red" }}>{errors.password.message}</p>}
-        </div>
-        <button type="submit">Login</button>
-      </form>
+    <div style={{ textAlign: "center", marginTop: "20%" }}>
+      <h1>Welcome to the App</h1>
+      <p>Redirecting to Spotify for authentication...</p>
     </div>
   );
 };
