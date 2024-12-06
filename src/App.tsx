@@ -7,20 +7,20 @@ import Login from "./pages/Login";
 import Home from "./pages/Home";
 import Quiz from "./pages/Quiz";
 import Progress from "./pages/Progress";
+import { UserProvider } from "./context/UserContext";
 
 const App: React.FC = () => {
-
-
-
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/quiz" element={<Quiz />} />
-        <Route path="/progress" element={<Progress />} />
-      </Routes>
-    </Router>
+    <UserProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/quiz" element={<Quiz />} />
+          <Route path="/progress" element={<Progress />} />
+        </Routes>
+      </Router>
+    </UserProvider>
   );
 };
 

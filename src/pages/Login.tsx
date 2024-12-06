@@ -1,20 +1,16 @@
-/*This page is not needed anymore*/
 import React, { useEffect } from "react";
-import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "../context/UserContext"; // Import the useUser hook
 import {
   fetchProfile,
   getAccessToken,
   redirectToAuthCodeFlow,
 } from "../utils/spotifyAuth";
 
-interface LoginFormInputs {
-  username: string;
-  password: string;
-}
-
 const Login: React.FC = () => {
-  const navigate = useNavigate(); // Initialize the navigate function
+  const navigate = useNavigate();
+  const { setUser } = useUser(); // Access setUser function from context
+
   const clientId = "ddfd97f98dbd402788670fc5a2a118bf";
 
   useEffect(() => {
@@ -23,21 +19,22 @@ const Login: React.FC = () => {
       const code = params.get("code");
 
       if (!code) {
-        // No authorization code, redirect to Spotify for login
-        redirectToAuthCodeFlow(clientId);
+        redirectToAuthCodeFlow(clientId); // Redirect to Spotify for login
       } else {
         try {
-          // Authorization code present, exchange for access token
+          // Exchange authorization code for access token
           const accessToken = await getAccessToken(clientId, code);
           const profile = await fetchProfile(accessToken);
 
-          console.log(profile); // Logs profile data to the console
+          setUser({
+            // Set the user data in context
+            name: profile.display_name,
+            avatar: profile.images[0]?.url || "https://via.placeholder.com/40",
+            points: 50, // Example default value, modify as needed
+          });
 
-          // Display a random favorite track (implement your logic in randomTrackQuestion)
-          //await randomTrackQuestion(accessToken);
-
-          // Navigate to the home page after successful authentication
-          navigate("/home"); // Navigates to the /home route
+          // Redirect to the home page after successful login
+          navigate("/home");
         } catch (error) {
           console.error("Error during authentication process:", error);
         }
@@ -45,7 +42,7 @@ const Login: React.FC = () => {
     };
 
     handleLogin();
-  }, [navigate]); // Add navigate to the dependency array
+  }, [navigate, setUser]);
 
   return (
     <div style={{ textAlign: "center", marginTop: "20%" }}>

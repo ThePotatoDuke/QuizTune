@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import token from "../pages/token.png";
+import { useUser } from "../context/UserContext";
 
 const Header = styled.header`
   background-color: black;
@@ -47,17 +48,16 @@ const PointsText = styled.span`
   color: white;
 `;
 
-const Topheader: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
-  /* This is where our user's infomation resides */
-  const user = {
-    name: "gooner4ever",
-    avatar: "https://via.placeholder.com/40",
-    points: 50,
-  };
+const Topheader: React.FC = () => {
+  const { user } = useUser(); // Access the user data from context
+
+  if (!user) {
+    return <div>Loading...</div>; // Show a loading state if the user is not authenticated
+  }
 
   return (
     <Header>
-      <div>Spofued</div>
+      <div>QuizTune</div>
       <ProfileSection>
         <PointsSection>
           <TokenImage src={token} alt="Token" />
@@ -66,7 +66,6 @@ const Topheader: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
         <ProfileImage src={user.avatar} alt="User Profile" />
         <UserName>{user.name}</UserName>
       </ProfileSection>
-      {children}
     </Header>
   );
 };
