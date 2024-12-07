@@ -8,41 +8,6 @@ import {
 } from "../utils/spotifyUtils";
 import { useUser } from "../context/UserContext";
 
-const Container = styled.div`
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  padding: 10px;
-  font-family: Arial, sans-serif;
-`;
-
-const QuestionContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  margin-left: 20px;
-`;
-
-const ImageContainer = styled.div`
-  width: 400px;
-  height: 400px;
-  border: 3px dashed #000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const QuestionText = styled.div`
-  font-size: 1.2rem;
-  margin-bottom: 20px;
-`;
-
-const ChoicesContainer = styled.div`
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
-`;
-
 const ChoiceButton = styled.button<{
   isCorrect?: boolean;
   isSelected?: boolean;
