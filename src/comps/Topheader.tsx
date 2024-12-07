@@ -45,7 +45,7 @@ const TokenImage = styled.img`
 
 const PointsText = styled.span`
   font-size: 1rem;
-  color: white;
+  color: yellow;
 `;
 
 const Topheader: React.FC = () => {

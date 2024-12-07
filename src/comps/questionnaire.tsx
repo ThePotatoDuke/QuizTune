@@ -51,7 +51,7 @@ const ChoiceButton = styled.button<{
     isSelected ? (isCorrect ? "#4caf50" : "#e74c3c") : "#f9f9f9"};
   border: 2px solid #ccc;
   color: #000;
-  padding: 10px;
+  padding: 5px;
   font-size: 1rem;
   cursor: ${({ isSelected }) => (isSelected ? "not-allowed" : "pointer")};
   border-radius: 5px;
@@ -63,8 +63,8 @@ const ChoiceButton = styled.button<{
   }
 
   img {
-    width: 300px; /* Adjust the width as needed */
-    height: 300px; /* Adjust the height as needed */
+    width: 250px; /* Adjust the width as needed */
+    height: 250px; /* Adjust the height as needed */
     object-fit: cover; /* This ensures the image covers the area without stretching */
     border-radius: 5px;
   }
