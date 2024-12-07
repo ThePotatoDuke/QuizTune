@@ -50,21 +50,21 @@ const ChoiceButton = styled.button<{
   background-color: ${({ isSelected, isCorrect }) =>
     isSelected ? (isCorrect ? "#4caf50" : "#e74c3c") : "#f9f9f9"};
   border: 1px solid #ccc;
-  color: #000;
-  padding: 15px;
+  padding: 20px;
   font-size: 1rem;
   cursor: ${({ isSelected }) => (isSelected ? "not-allowed" : "pointer")};
-  border-radius: 5px;
+  border-radius: 20px;
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
+  margin:20px;
 
   &:hover {
     background-color: ${({ isSelected }) => (isSelected ? "" : "#ddd")};
   }
 
   img {
-    width: 250px; /* Adjust the width as needed */
-    height: 250px; /* Adjust the height as needed */
+    width: 300px; /* Adjust the width as needed */
+    height: 300px; /* Adjust the height as needed */
     object-fit: cover; /* This ensures the image covers the area without stretching */
     border-radius: 5px;
   }
@@ -79,7 +79,7 @@ const ResultMessage = styled.div`
 const ScoreBoard = styled.div`
   
   margin-top: 20px;
-  font-size: 1.2rem;
+  font-size: 2rem;
   color: black
 `;
 
@@ -206,7 +206,7 @@ const Questionnaire: React.FC = () => {
       ) : (
         <>
           <div>
-            <h2>{questions[currentQuestion].text}</h2>
+            <h1>{questions[currentQuestion].text}</h1>
 
             <div>
               {questions[currentQuestion].choices.map((choice, index) => (
@@ -225,13 +225,14 @@ const Questionnaire: React.FC = () => {
                 </ChoiceButton>
               ))}
             </div>
+            <ScoreBoard>Score: {score}</ScoreBoard>
 
             {selected !== null && (
               <>
                 <ResultMessage
                     style={{
                       marginTop: '20px',
-                      fontSize: '1.2rem',
+                      fontSize: '1.5rem',
                       color: isCorrect ? 'green' : 'red',
                     }}
                     >{isCorrect ? "Correct!" : "Wrong!"}</ResultMessage>
@@ -247,7 +248,6 @@ const Questionnaire: React.FC = () => {
                 onClick={handleNextQuestion}>Next Question</button>
               </>
             )}
-            <ScoreBoard>Score: {score}</ScoreBoard>
           </div>
         </>
       )}
