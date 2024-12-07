@@ -49,9 +49,9 @@ const ChoiceButton = styled.button<{
 }>`
   background-color: ${({ isSelected, isCorrect }) =>
     isSelected ? (isCorrect ? "#4caf50" : "#e74c3c") : "#f9f9f9"};
-  border: 2px solid #ccc;
+  border: 1px solid #ccc;
   color: #000;
-  padding: 5px;
+  padding: 15px;
   font-size: 1rem;
   cursor: ${({ isSelected }) => (isSelected ? "not-allowed" : "pointer")};
   border-radius: 5px;
@@ -77,9 +77,10 @@ const ResultMessage = styled.div`
 `;
 
 const ScoreBoard = styled.div`
+  
   margin-top: 20px;
   font-size: 1.2rem;
-  color: #333;
+  color: black
 `;
 
 const MenuButton = styled.button`
@@ -199,7 +200,8 @@ const Questionnaire: React.FC = () => {
           <div>
             Your Score: {score} / {questions.length * 10}
           </div>
-          <button onClick={navToHome}>Return to Menu</button>
+          <button
+          onClick={navToHome}>Return to Menu</button>
         </div>
       ) : (
         <>
@@ -226,11 +228,26 @@ const Questionnaire: React.FC = () => {
 
             {selected !== null && (
               <>
-                <div>{isCorrect ? "Correct!" : "Wrong!"}</div>
-                <button onClick={handleNextQuestion}>Next Question</button>
+                <ResultMessage
+                    style={{
+                      marginTop: '20px',
+                      fontSize: '1.2rem',
+                      color: isCorrect ? 'green' : 'red',
+                    }}
+                    >{isCorrect ? "Correct!" : "Wrong!"}</ResultMessage>
+                <button 
+                    style={{
+                      border: "2px solid black",
+                      marginTop: "20px",
+                      padding: "10px 20px",
+                      backgroundColor: "white",
+                      color: "black",
+                      cursor: "pointer",
+                  }}
+                onClick={handleNextQuestion}>Next Question</button>
               </>
             )}
-            <div>Score: {score}</div>
+            <ScoreBoard>Score: {score}</ScoreBoard>
           </div>
         </>
       )}
