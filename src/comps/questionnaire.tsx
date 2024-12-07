@@ -114,6 +114,8 @@ const Questionnaire: React.FC = () => {
   const [score, setScore] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
+  
+  const maxQuestions = 3; 
 
   const navigate = useNavigate();
 
@@ -135,11 +137,12 @@ const Questionnaire: React.FC = () => {
         }
         tracks = [...tracks].sort(() => Math.random() - 0.5);
 
-        // Generate questions from the fetched tracks
+        // Generate questions from the fetched tracks 
+        // With maxQuestion added
         const generatedQuestions: Question[] = await Promise.all(
-          tracks.map(async (track) => {
+          tracks.slice(0, maxQuestions).map(async (track) => {
             const { question, correctAnswer, questionType } =
-              generateTrackQuestion(track); // Generate the question for the track
+              generateTrackQuestion(track);
 
             // Generate answer options using the track data
             const answerOptions = generateAnswerOptions(
@@ -161,7 +164,8 @@ const Questionnaire: React.FC = () => {
           })
         );
 
-        setQuestions(generatedQuestions); // Set the generated questions to the state
+        // With maxQuestion added
+        setQuestions(generatedQuestions.slice(0, maxQuestions));
       } catch (error) {
         console.error("Error fetching tracks or generating questions:", error);
       }
@@ -197,11 +201,11 @@ const Questionnaire: React.FC = () => {
       {isQuizOver ? (
         <div>
           <h1>Quiz Completed!</h1>
-          <div>
+          <ScoreBoard>
             Your Score: {score} / {questions.length * 10}
-          </div>
-          <button
-          onClick={navToHome}>Return to Menu</button>
+          </ScoreBoard>
+          <MenuButton
+          onClick={navToHome}>Return to Menu</MenuButton>
         </div>
       ) : (
         <>
