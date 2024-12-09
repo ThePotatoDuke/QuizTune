@@ -77,6 +77,8 @@ export function generateAnswerOptions(
   questionType: string,
   tracks: Track[]
 ): (string | number)[] {
+
+  // console.log("db")
   let options: (string | number)[] = [];
 
   switch (questionType) {

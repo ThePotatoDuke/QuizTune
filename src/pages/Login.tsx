@@ -6,13 +6,11 @@ import {
   getAccessToken,
   redirectToAuthCodeFlow,
 } from "../utils/spotifyAuth";
-
-// Assume `getAccessToken`, `fetchProfile`, and `redirectToAuthCodeFlow` are available utility functions
+import { insertUserData } from "../database/dbHelper";
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
   const { setUser } = useUser(); // Access setUser function from context
-
   const clientId = "ddfd97f98dbd402788670fc5a2a118bf"; // Your Spotify client ID
 
   useEffect(() => {
@@ -37,6 +35,14 @@ const Login: React.FC = () => {
             avatar: profile.images[0]?.url || "https://via.placeholder.com/40", // Default avatar if not available
             points: 50, // Example default value, modify as needed
             accessToken, // Store the access token in the context as well
+          });
+
+          // Insert user data into the database
+          insertUserData({
+            name: profile.display_name,
+            avatar: profile.images[0]?.url || "https://via.placeholder.com/40",
+            points: 50,
+            accessToken,
           });
 
           // Redirect to the home page after successful login

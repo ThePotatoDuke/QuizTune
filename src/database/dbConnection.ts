@@ -1,24 +1,36 @@
 import * as sql from 'mssql';
+import dotenv from 'dotenv';
 
-console.log("hiii");
-// Configuration for connecting to your database
+// Load environment variables from the .env file
+dotenv.config();
+
+console.log("Database configuration loaded.");
+
 const dbConfig = {
-  server: 'DESKTOP-FCAH7OP\\MSSQLSERVER01', // or your server's address
-  database: 'seng429',
+  server: process.env.DB_SERVER as string,
+  database: process.env.DB_DATABASE as string,
+  user: process.env.DB_USER as string,
+  password: process.env.DB_PASSWORD as string,
   options: {
-    encrypt: false, // Use true if connecting to an Azure database
-    trustServerCertificate: true, 
+    encrypt: process.env.DB_ENCRYPT === 'true', // Convert to boolean
+    trustServerCertificate: process.env.DB_TRUST_SERVER_CERTIFICATE === 'true', // Convert to boolean
   },
 };
 
 // Function to create a connection pool
 export async function connectToDatabase() {
   try {
+    console.log("Attempting to connect to the database...");
     const pool = await sql.connect(dbConfig);
     console.log("Database connected successfully!");
     return pool;
   } catch (error) {
-    console.error("Database connection failed:", error);
+    console.dir(error, { depth: null });
+    if (error instanceof Error) {
+      console.error("Database connection failed:", error.stack);
+    } else {
+      console.error("Database connection failed:", error);
+    }
     throw error;
   }
 }
@@ -29,6 +41,10 @@ export async function closeConnection(pool: sql.ConnectionPool) {
     await pool.close();
     console.log("Database connection closed.");
   } catch (error) {
-    console.error("Error closing database connection:", error);
+    if (error instanceof Error) {
+      console.error("Error closing database connection:", error.stack);
+    } else {
+      console.error("Error closing database connection:", error);
+    }
   }
 }
