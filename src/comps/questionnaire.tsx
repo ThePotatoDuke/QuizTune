@@ -8,55 +8,20 @@ import {
 } from "../utils/spotifyUtils";
 import { useUser } from "../context/UserContext";
 
-const Container = styled.div`
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  padding: 10px;
-  font-family: Arial, sans-serif;
-`;
-
-const QuestionContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  margin-left: 20px;
-`;
-
-const ImageContainer = styled.div`
-  width: 400px;
-  height: 400px;
-  border: 3px dashed #000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const QuestionText = styled.div`
-  font-size: 1.2rem;
-  margin-bottom: 20px;
-`;
-
-const ChoicesContainer = styled.div`
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
-`;
-
 const ChoiceButton = styled.button<{
   isCorrect?: boolean;
   isSelected?: boolean;
 }>`
   background-color: ${({ isSelected, isCorrect }) =>
     isSelected ? (isCorrect ? "#4caf50" : "#e74c3c") : "#f9f9f9"};
-  border: 2px solid #ccc;
-  color: #000;
-  padding: 10px;
+  border: 1px solid #ccc;
+  padding: 20px;
   font-size: 1rem;
   cursor: ${({ isSelected }) => (isSelected ? "not-allowed" : "pointer")};
-  border-radius: 5px;
+  border-radius: 20px;
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
+  margin:20px;
 
   &:hover {
     background-color: ${({ isSelected }) => (isSelected ? "" : "#ddd")};
@@ -77,9 +42,10 @@ const ResultMessage = styled.div`
 `;
 
 const ScoreBoard = styled.div`
+  
   margin-top: 20px;
-  font-size: 1.2rem;
-  color: #333;
+  font-size: 2rem;
+  color: black
 `;
 
 const MenuButton = styled.button`
@@ -113,6 +79,8 @@ const Questionnaire: React.FC = () => {
   const [score, setScore] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
+  
+  const maxQuestions = 3; 
 
   const navigate = useNavigate();
 
@@ -134,11 +102,12 @@ const Questionnaire: React.FC = () => {
         }
         tracks = [...tracks].sort(() => Math.random() - 0.5);
 
-        // Generate questions from the fetched tracks
+        // Generate questions from the fetched tracks 
+        // With maxQuestion added
         const generatedQuestions: Question[] = await Promise.all(
-          tracks.map(async (track) => {
+          tracks.slice(0, maxQuestions).map(async (track) => {
             const { question, correctAnswer, questionType } =
-              generateTrackQuestion(track); // Generate the question for the track
+              generateTrackQuestion(track);
 
             // Generate answer options using the track data
             const answerOptions = generateAnswerOptions(
@@ -160,7 +129,8 @@ const Questionnaire: React.FC = () => {
           })
         );
 
-        setQuestions(generatedQuestions); // Set the generated questions to the state
+        // With maxQuestion added
+        setQuestions(generatedQuestions.slice(0, maxQuestions));
       } catch (error) {
         console.error("Error fetching tracks or generating questions:", error);
       }
@@ -196,15 +166,16 @@ const Questionnaire: React.FC = () => {
       {isQuizOver ? (
         <div>
           <h1>Quiz Completed!</h1>
-          <div>
+          <ScoreBoard>
             Your Score: {score} / {questions.length * 10}
-          </div>
-          <button onClick={navToHome}>Return to Menu</button>
+          </ScoreBoard>
+          <MenuButton
+          onClick={navToHome}>Return to Menu</MenuButton>
         </div>
       ) : (
         <>
           <div>
-            <h2>{questions[currentQuestion].text}</h2>
+            <h1>{questions[currentQuestion].text}</h1>
 
             <div>
               {questions[currentQuestion].choices.map((choice, index) => (
@@ -223,14 +194,29 @@ const Questionnaire: React.FC = () => {
                 </ChoiceButton>
               ))}
             </div>
+            <ScoreBoard>Score: {score}</ScoreBoard>
 
             {selected !== null && (
               <>
-                <div>{isCorrect ? "Correct!" : "Wrong!"}</div>
-                <button onClick={handleNextQuestion}>Next Question</button>
+                <ResultMessage
+                    style={{
+                      marginTop: '20px',
+                      fontSize: '1.5rem',
+                      color: isCorrect ? 'green' : 'red',
+                    }}
+                    >{isCorrect ? "Correct!" : "Wrong!"}</ResultMessage>
+                <button 
+                    style={{
+                      border: "2px solid black",
+                      marginTop: "20px",
+                      padding: "10px 20px",
+                      backgroundColor: "white",
+                      color: "black",
+                      cursor: "pointer",
+                  }}
+                onClick={handleNextQuestion}>Next Question</button>
               </>
             )}
-            <div>Score: {score}</div>
           </div>
         </>
       )}
