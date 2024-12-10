@@ -1,4 +1,5 @@
 import React from "react";
+import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import Topheader from "../comps/Topheader";
 import LeftSideBar from "../comps/leftSidebar";
@@ -15,13 +16,22 @@ const Layout = styled.div`
 `;
 
 const Quiz: React.FC = () => {
+
+  // To pass the selected types
+  const location = useLocation();
+  const { questionType } = location.state || {};
+
+  if (!questionType) {
+    return <div>Error: No question type selected!</div>;
+  }
+
   return (
     <Container>
       <Topheader></Topheader>
       <Layout>
         <LeftSideBar></LeftSideBar>
         <MainContent>
-          <Questionnaire></Questionnaire>
+          <Questionnaire selectedType={questionType} ></Questionnaire>
           {/*This is where the real deal is*/}
         </MainContent>
       </Layout>

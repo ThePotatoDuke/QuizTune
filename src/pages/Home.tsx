@@ -34,9 +34,9 @@ const DashboardTitle = styled.h2`
 const Home: React.FC = () => {
   const navigate = useNavigate();
 
-  // Direction to the expected pages
-  const navToChallenge = () => {
-    navigate("/quiz");
+// With the question type being selectable an all
+  const navToQuiz = (type: string) => {
+    navigate("/quiz", { state: { questionType: type } });
   };
 
   return (
@@ -46,17 +46,25 @@ const Home: React.FC = () => {
         <LeftSideBar></LeftSideBar>
         <MainContent>
           <DashboardTitle>Challenges</DashboardTitle>
-          <Card onClick={navToChallenge}>
-            <h3>Challenge #1</h3>
-            <p>Do it!</p>
+          <Card onClick={() => navToQuiz("release_date")}>
+            <h3>Challenge: Release Date</h3>
+            <p>Answer questions about song release dates.</p>
           </Card>
-          <Card onClick={navToChallenge}>
-            <h3>Challenge #2</h3>
-            <p>Do it!</p>
+          <Card onClick={() => navToQuiz("artist")}>
+            <h3>Challenge: Artist</h3>
+            <p>Answer questions about song artists.</p>
           </Card>
-          <Card onClick={navToChallenge}>
-            <h3>Challenge #3</h3>
-            <p>Do it!</p>
+          <Card onClick={() => navToQuiz("popularity")}>
+            <h3>Challenge: Popularity</h3>
+            <p>Answer questions about song popularity.</p>
+          </Card>
+          <Card onClick={() => navToQuiz("album_cover")}>
+            <h3>Challenge: Album Cover</h3>
+            <p>Answer questions about album covers.</p>
+          </Card>
+          <Card onClick={() => navToQuiz("random")}>
+            <h3>Challenge: Random</h3>
+            <p>Answer a mix of random questions.</p>
           </Card>
         </MainContent>
         <RightSidebar></RightSidebar>

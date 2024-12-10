@@ -39,10 +39,7 @@ export function getRandomTrack(tracks: Track[]): Track {
   return tracks[randomIndex];
 }
 
-export function generateTrackQuestion(track: Track) {
-  const questionTypes = ["release_date", "artist", "popularity", "album_cover"];
-  const questionType = questionTypes[3]; // THIS IS WHERE WE SET QUESTION TYPESSSSSSSSSSSS
-
+export function generateTrackQuestion(track: Track, questionType: string) {
   let question: string = "",
     correctAnswer: string | number = "";
 
@@ -67,6 +64,10 @@ export function generateTrackQuestion(track: Track) {
       question = `Identify the album cover for "${track.name}" by ${track.artists[0].name}.`;
       correctAnswer = track.album.images[0].url;
       break;
+
+    // In case of an emergency
+    default:
+      throw new Error(`Unsupported question type: ${questionType}`);
   }
 
   return { question, correctAnswer, questionType };

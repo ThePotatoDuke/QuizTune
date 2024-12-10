@@ -72,16 +72,19 @@ interface Question {
   questionType: string; // Add the question type (e.g., 'album_cover', 'artist', etc.)
 }
 
-const Questionnaire: React.FC = () => {
+interface QuestionnaireProps {
+  selectedType: string;
+}
+
+const Questionnaire: React.FC<QuestionnaireProps> = ({ selectedType }) => {
   const { user } = useUser(); // Get user data from context
-  const [questions, setQuestions] = useState<Question[]>([]); // Will hold dynamically generated questions
+  const [questions, setQuestions] = useState<Question[]>([]);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [score, setScore] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
-  
-  const maxQuestions = 3; 
 
+  const maxQuestions = 10; 
   const navigate = useNavigate();
 
   // Fetch favorite tracks and generate questions when the component mounts
@@ -106,10 +109,18 @@ const Questionnaire: React.FC = () => {
         // With maxQuestion added
         const generatedQuestions: Question[] = await Promise.all(
           tracks.slice(0, maxQuestions).map(async (track) => {
-            const { question, correctAnswer, questionType } =
-              generateTrackQuestion(track);
+            const questionType =
+              selectedType === "random"
+                ? ["release_date", "artist", "popularity", "album_cover"][
+                    Math.floor(Math.random() * 4)
+                  ]
+                : selectedType;
 
-            // Generate answer options using the track data
+            const { question, correctAnswer } = generateTrackQuestion(
+              track,
+              questionType
+            );
+
             const answerOptions = generateAnswerOptions(
               correctAnswer,
               questionType,
@@ -137,7 +148,7 @@ const Questionnaire: React.FC = () => {
     };
 
     fetchQuestions();
-  }, [user?.accessToken]);
+  }, [user?.accessToken, selectedType]);
 
   const navToHome = () => {
     navigate("/home");
