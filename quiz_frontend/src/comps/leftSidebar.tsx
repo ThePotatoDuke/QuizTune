@@ -9,10 +9,10 @@ const SidebarLinks = styled.ul`
     padding: 0;
 
     li {
-      margin: 10px 0;
-      padding: 10px;
-      cursor: pointer;
-      transition: background 0.3s;
+		margin: 10px 0;
+		padding: 10px;
+		cursor: pointer;
+		transition: background 0.3s;
     }
 `;
 
@@ -26,7 +26,7 @@ const NormalButton = styled.li`
     transition: background-color 0.3s;
     text-align: left;
     &:hover {
-      background-color: #575757; 
+      	background-color: #575757; 
     }
 `;
 
@@ -41,7 +41,7 @@ const LogoutButton = styled.li`
     transition: background-color 0.3s;
 
     &:hover {
-      background-color: #c0392b; /* Darker red on hover */
+      	background-color: #c0392b; /* Darker red on hover */
     }
 `;
 
