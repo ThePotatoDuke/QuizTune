@@ -3,7 +3,6 @@ import React from "react";
 import styled from "styled-components";
 
 const Sidebar = styled.nav`
-    
     background-color: #333;
     color: white;
     width: 250px;
@@ -12,7 +11,6 @@ const Sidebar = styled.nav`
     box-sizing: border-box;
     border-radius: 10px; 
     margin: 5px;
-  
 `;
 
 export default Sidebar;

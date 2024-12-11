@@ -62,14 +62,14 @@ const LeftSideBar: React.FC<{ children?: React.ReactNode }> = ({ children }) => 
     };
 
     return (
-    <Sidebar>
-      <SidebarLinks>
-        <NormalButton onClick={navToHome}>Home</NormalButton>
-        <NormalButton onClick={navToProgress}>Progress</NormalButton>
-        <li>Settings</li>
-        <LogoutButton onClick={handleLogout}>Logout</LogoutButton>
-      </SidebarLinks>
-    </Sidebar>
+		<Sidebar>
+		<SidebarLinks>
+			<NormalButton onClick={navToHome}>Home</NormalButton>
+			<NormalButton onClick={navToProgress}>Progress</NormalButton>
+			<li>Settings</li>
+			<LogoutButton onClick={handleLogout}>Logout</LogoutButton>
+		</SidebarLinks>
+		</Sidebar>
     );
 };
   
