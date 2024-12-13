@@ -21,7 +21,7 @@ const ChoiceButton = styled.button<{
   border-radius: 20px;
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
-  margin:20px;
+  margin: 20px;
 
   &:hover {
     background-color: ${({ isSelected }) => (isSelected ? "" : "#ddd")};
@@ -42,10 +42,9 @@ const ResultMessage = styled.div`
 `;
 
 const ScoreBoard = styled.div`
-  
   margin-top: 20px;
   font-size: 2rem;
-  color: black
+  color: black;
 `;
 
 const MenuButton = styled.button`
@@ -79,8 +78,8 @@ const Questionnaire: React.FC = () => {
   const [score, setScore] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
-  
-  const maxQuestions = 3; 
+
+  const maxQuestions = 3;
 
   const navigate = useNavigate();
 
@@ -102,7 +101,7 @@ const Questionnaire: React.FC = () => {
         }
         tracks = [...tracks].sort(() => Math.random() - 0.5);
 
-        // Generate questions from the fetched tracks 
+        // Generate questions from the fetched tracks
         // With maxQuestion added
         const generatedQuestions: Question[] = await Promise.all(
           tracks.slice(0, maxQuestions).map(async (track) => {
@@ -169,8 +168,7 @@ const Questionnaire: React.FC = () => {
           <ScoreBoard>
             Your Score: {score} / {questions.length * 10}
           </ScoreBoard>
-          <MenuButton
-          onClick={navToHome}>Return to Menu</MenuButton>
+          <MenuButton onClick={navToHome}>Return to Menu</MenuButton>
         </div>
       ) : (
         <>
@@ -199,22 +197,27 @@ const Questionnaire: React.FC = () => {
             {selected !== null && (
               <>
                 <ResultMessage
-                    style={{
-                      marginTop: '20px',
-                      fontSize: '1.5rem',
-                      color: isCorrect ? 'green' : 'red',
-                    }}
-                    >{isCorrect ? "Correct!" : "Wrong!"}</ResultMessage>
-                <button 
-                    style={{
-                      border: "2px solid black",
-                      marginTop: "20px",
-                      padding: "10px 20px",
-                      backgroundColor: "white",
-                      color: "black",
-                      cursor: "pointer",
+                  style={{
+                    marginTop: "20px",
+                    fontSize: "1.5rem",
+                    color: isCorrect ? "green" : "red",
                   }}
-                onClick={handleNextQuestion}>Next Question</button>
+                >
+                  {isCorrect ? "Correct!" : "Wrong!"}
+                </ResultMessage>
+                <button
+                  style={{
+                    border: "2px solid black",
+                    marginTop: "20px",
+                    padding: "10px 20px",
+                    backgroundColor: "white",
+                    color: "black",
+                    cursor: "pointer",
+                  }}
+                  onClick={handleNextQuestion}
+                >
+                  Next Question
+                </button>
               </>
             )}
           </div>
