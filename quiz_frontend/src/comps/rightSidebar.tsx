@@ -5,7 +5,7 @@ import Sidebar from "./Sidebar";
 
 const RightSidebar: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
     return (
-    <Sidebar>
+	<Sidebar>
     </Sidebar>
     );
 };
