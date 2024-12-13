@@ -49,6 +49,31 @@ app.post("/api/addUser", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
+app.get("/api/userScore", async (req, res) => {
+  const { name } = req.query; // Retrieve name from query parameters
+
+  if (!name) {
+    return res.status(400).json({ error: "Name is required" });
+  }
+
+  try {
+    // Query the database for the user's score
+    const result = await pool.query(
+      'SELECT score FROM "User" WHERE "name" = $1',
+      [name]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const score = result.rows[0].score;
+    res.status(200).json({ name, score });
+  } catch (error) {
+    console.error("Error fetching user score:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 
 // Get all questions
 app.get("/questions", async (req, res) => {
