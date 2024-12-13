@@ -25,52 +25,58 @@ app.post("/api/addUser", async (req, res) => {
   try {
     // Check if the user exists
     const existingUser = await pool.query(
-      'SELECT * FROM "User" WHERE "name" = $1',
+      'SELECT score FROM "User" WHERE name = $1',
       [name]
     );
 
     if (existingUser.rows.length > 0) {
-      return res
-        .status(200)
-        .json({ message: "User already exists", user: existingUser.rows[0] });
+      // If the user exists, return their score
+      return res.status(200).json({
+        message: "User already exists",
+        user: { name, score: existingUser.rows[0].score },
+      });
     }
 
-    // Insert new user with a default score of 0
+    // If the user doesn't exist, create a new record with default points
     const newUser = await pool.query(
       'INSERT INTO "User" (name, score) VALUES ($1, $2) RETURNING *',
-      [name, 0]
+      [name, 0] // Default points for new users
     );
 
-    res
-      .status(201)
-      .json({ message: "User added successfully", user: newUser.rows[0] });
+    res.status(201).json({
+      message: "User added successfully",
+      user: { name: newUser.rows[0].name, score: newUser.rows[0].score },
+    });
   } catch (error) {
-    console.error(error);
+    console.error("Error in /api/addUser:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
-app.get("/api/userScore", async (req, res) => {
-  const { name } = req.query; // Retrieve name from query parameters
 
-  if (!name) {
-    return res.status(400).json({ error: "Name is required" });
+// Update user score
+app.put("/api/updateScore", async (req, res) => {
+  const { name, points } = req.body;
+
+  if (!name || points == null) {
+    return res.status(400).json({ error: "Name and points are required" });
   }
 
   try {
-    // Query the database for the user's score
-    const result = await pool.query(
-      'SELECT score FROM "User" WHERE "name" = $1',
-      [name]
+    const updatedUser = await pool.query(
+      'UPDATE "User" SET score = $1 WHERE name = $2 RETURNING *',
+      [points, name]
     );
 
-    if (result.rows.length === 0) {
+    if (updatedUser.rows.length === 0) {
       return res.status(404).json({ error: "User not found" });
     }
 
-    const score = result.rows[0].score;
-    res.status(200).json({ name, score });
+    res.status(200).json({
+      message: "Score updated successfully",
+      user: updatedUser.rows[0],
+    });
   } catch (error) {
-    console.error("Error fetching user score:", error);
+    console.error(error);
     res.status(500).json({ error: "Internal server error" });
   }
 });

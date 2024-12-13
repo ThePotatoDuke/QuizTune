@@ -7,6 +7,7 @@ import {
   generateTrackQuestion,
 } from "../utils/spotifyUtils";
 import { useUser } from "../context/UserContext";
+import { updateUserScore } from "../api/userApi";
 
 const ChoiceButton = styled.button<{
   isCorrect?: boolean;
@@ -28,9 +29,9 @@ const ChoiceButton = styled.button<{
   }
 
   img {
-    width: 300px; /* Adjust the width as needed */
-    height: 300px; /* Adjust the height as needed */
-    object-fit: cover; /* This ensures the image covers the area without stretching */
+    width: 300px;
+    height: 300px;
+    object-fit: cover;
     border-radius: 5px;
   }
 `;
@@ -65,10 +66,10 @@ const MenuButton = styled.button`
 
 interface Question {
   text: string;
-  choices: string[]; // Ensure choices are strings (image URLs or text)
+  choices: string[];
   correctIndex: number;
-  track?: any; // Optional: Track data if needed
-  questionType: string; // Add the question type (e.g., 'album_cover', 'artist', etc.)
+  track?: any;
+  questionType: string;
 }
 
 interface QuestionnaireProps {
@@ -76,7 +77,7 @@ interface QuestionnaireProps {
 }
 
 const Questionnaire: React.FC<QuestionnaireProps> = ({ selectedType }) => {
-  const { user } = useUser(); // Get user data from context
+  const { user, setUser } = useUser();
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [score, setScore] = useState(0);
@@ -86,7 +87,6 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({ selectedType }) => {
   const maxQuestions = 10;
   const navigate = useNavigate();
 
-  // Fetch favorite tracks and generate questions when the component mounts
   useEffect(() => {
     const fetchQuestions = async () => {
       if (!user?.accessToken) {
@@ -95,7 +95,6 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({ selectedType }) => {
       }
 
       try {
-        // Fetch the favorite tracks using the token
         let tracks = await fetchFavoriteTracks(user.accessToken);
 
         if (tracks.length === 0) {
@@ -104,8 +103,6 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({ selectedType }) => {
         }
         tracks = [...tracks].sort(() => Math.random() - 0.5);
 
-        // Generate questions from the fetched tracks
-        // With maxQuestion added
         const generatedQuestions: Question[] = await Promise.all(
           tracks.slice(0, maxQuestions).map(async (track) => {
             const questionType =
@@ -124,22 +121,20 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({ selectedType }) => {
               correctAnswer,
               questionType,
               tracks
-            ); // Assuming generateAnswerOptions can handle this
+            );
 
-            // Map answer options to strings (if they are not already)
             const textOptions = answerOptions.map((option) => String(option));
 
             return {
               text: question,
-              choices: textOptions, // Set the choices as text-only options (string[])
-              correctIndex: textOptions.indexOf(String(correctAnswer)), // Ensure correctAnswer is a string
-              track, // Optional: you can store the track data here for additional use
-              questionType, // Add the questionType here
+              choices: textOptions,
+              correctIndex: textOptions.indexOf(String(correctAnswer)),
+              track,
+              questionType,
             };
           })
         );
 
-        // With maxQuestion added
         setQuestions(generatedQuestions.slice(0, maxQuestions));
       } catch (error) {
         console.error("Error fetching tracks or generating questions:", error);
@@ -154,22 +149,36 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({ selectedType }) => {
   };
 
   const handleChoiceClick = (index: number) => {
-    if (selected !== null) return; // Prevent multiple selections
+    if (selected !== null) return;
     setSelected(index);
     const correct = index === questions[currentQuestion].correctIndex;
     setIsCorrect(correct);
     if (correct) {
-      setScore((prev) => prev + 10); // Add 10 points for a correct answer
+      setScore((prev) => prev + 10);
     }
   };
 
   const handleNextQuestion = () => {
-    setSelected(null); // Reset selection
-    setIsCorrect(null); // Reset correctness
-    setCurrentQuestion((prev) => prev + 1); // Go to the next question
+    setSelected(null);
+    setIsCorrect(null);
+    setCurrentQuestion((prev) => prev + 1);
   };
 
   const isQuizOver = currentQuestion >= questions.length;
+
+  const handleScoreUpdate = async () => {
+    if (user) {
+      try {
+        const updatedUser = await updateUserScore(
+          user.name,
+          user.points + score
+        );
+        setUser({ ...user, points: updatedUser.score });
+      } catch (error) {
+        console.error("Failed to update score:", error);
+      }
+    }
+  };
 
   return (
     <div>
@@ -179,7 +188,14 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({ selectedType }) => {
           <ScoreBoard>
             Your Score: {score} / {questions.length * 10}
           </ScoreBoard>
-          <MenuButton onClick={navToHome}>Return to Menu</MenuButton>
+          <MenuButton
+            onClick={async () => {
+              await handleScoreUpdate();
+              navToHome();
+            }}
+          >
+            Return to Menu
+          </MenuButton>
         </div>
       ) : (
         <>
@@ -194,11 +210,10 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({ selectedType }) => {
                   isSelected={selected === index}
                   isCorrect={index === questions[currentQuestion].correctIndex}
                 >
-                  {/* Handle question type to render images or text */}
                   {questions[currentQuestion].questionType === "album_cover" ? (
-                    <img src={choice} alt={`Choice ${index}`} /> // Display image for album cover questions
+                    <img src={choice} alt={`Choice ${index}`} />
                   ) : (
-                    <span>{choice}</span> // Display text for other question types
+                    <span>{choice}</span>
                   )}
                 </ChoiceButton>
               ))}
