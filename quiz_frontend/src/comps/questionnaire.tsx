@@ -173,7 +173,7 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({ selectedType }) => {
       try {
         const updatedUser = await updateUserScore(
           user.name,
-          user.points + score
+          Number(user.points) + score
         );
         setUser({ ...user, points: updatedUser.score });
 
