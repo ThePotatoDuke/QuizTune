@@ -6,6 +6,7 @@ import {
   getAccessToken,
   redirectToAuthCodeFlow,
 } from "../utils/spotifyAuth";
+import syncUserWithBackend from "../api/userapi";
 
 // Assume `getAccessToken`, `fetchProfile`, and `redirectToAuthCodeFlow` are available utility functions
 
@@ -31,13 +32,25 @@ const Login: React.FC = () => {
           // Fetch the user's profile information using the access token
           const profile = await fetchProfile(accessToken);
 
-          // Store the user data and access token in the context
-          setUser({
+          // Initial user object with default points and progress
+          const user = {
             name: profile.display_name,
             avatar: profile.images[0]?.url || "https://via.placeholder.com/40", // Default avatar if not available
-            points: 50, // Example default value, modify as needed
-            accessToken, // Store the access token in the context as well
-          });
+            points: 0, // Default points value; will be updated if user exists in DB
+            progress: {
+              release_date: 0,
+              artist: 0,
+              popularity: 0,
+              album_cover: 0,
+              random: 0, // Initialize progress for each category
+            },
+          };
+
+          // Sync user with the backend and retrieve their points
+          const updatedUser = await syncUserWithBackend(user);
+
+          // Update user context with backend data, including progress
+          setUser({ ...updatedUser, accessToken, avatar: user.avatar, progress: user.progress });
 
           // Redirect to the home page after successful login
           navigate("/home");
@@ -48,7 +61,7 @@ const Login: React.FC = () => {
     };
 
     handleLogin();
-  }, [navigate, setUser, clientId]); // clientId can also be moved to useState if it's dynamic
+  }, [navigate, setUser, clientId]);
 
   return (
     <div style={{ textAlign: "center", marginTop: "20%" }}>
