@@ -1,3 +1,4 @@
+// Importing required modules
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
@@ -81,11 +82,25 @@ app.put("/api/updateScore", async (req, res) => {
   }
 });
 
-// Get all questions
+// Get all questions or filter by text
 app.get("api/questions", async (req, res) => {
+  const { text } = req.query;
+
   try {
-    const result = await pool.query("SELECT * FROM Question");
-    res.json(result.rows);
+    let result;
+    if (text) {
+      result = await pool.query('SELECT * FROM "Question" WHERE text LIKE $1', [
+        `%${text}%`,
+      ]);
+    } else {
+      result = await pool.query("SELECT * FROM Question");
+    }
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "No questions found" });
+    }
+
+    res.status(200).json(result.rows);
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server error");
@@ -137,11 +152,35 @@ app.post("/api/questions", async (req, res) => {
 
     res.json(result.rows[0]); // Return the inserted question
   } catch (err) {
-    console.error("Error inserting question:", err.message);
+    console.error(err.message);
     res.status(500).send("Server error");
   }
 });
 
+// Get all users or filter by name
+app.get("/api/users", async (req, res) => {
+  const { name } = req.query;
+
+  try {
+    let result;
+    if (name) {
+      result = await pool.query('SELECT * FROM "User" WHERE name = $1', [name]);
+    } else {
+      result = await pool.query('SELECT * FROM "User"');
+    }
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "No users found" });
+    }
+
+    res.status(200).json(result.rows);
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// Start the server
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
