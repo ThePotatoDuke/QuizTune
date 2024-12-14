@@ -7,7 +7,7 @@ import {
   generateTrackQuestion,
 } from "../utils/spotifyUtils";
 import { useUser } from "../context/UserContext";
-import { updateUserScore } from "../api/userApi";
+import { addQuestion, updateUserScore } from "../api/userApi";
 
 const ChoiceButton = styled.button<{
   isCorrect?: boolean;
@@ -68,6 +68,7 @@ interface Question {
   text: string;
   choices: string[];
   correctIndex: number;
+  userAnswerIndex?: number | null;
   track?: any;
   questionType: string;
 }
@@ -84,7 +85,7 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({ selectedType }) => {
   const [selected, setSelected] = useState<number | null>(null);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
 
-  const maxQuestions = 10;
+  const maxQuestions = 2;
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -153,6 +154,7 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({ selectedType }) => {
     setSelected(index);
     const correct = index === questions[currentQuestion].correctIndex;
     setIsCorrect(correct);
+    questions[currentQuestion].userAnswerIndex = index;
     if (correct) {
       setScore((prev) => prev + 10);
     }
@@ -166,7 +168,7 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({ selectedType }) => {
 
   const isQuizOver = currentQuestion >= questions.length;
 
-  const handleScoreUpdate = async () => {
+  const handleQuizEnd = async () => {
     if (user) {
       try {
         const updatedUser = await updateUserScore(
@@ -174,6 +176,17 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({ selectedType }) => {
           user.points + score
         );
         setUser({ ...user, points: updatedUser.score });
+
+        for (const question of questions) {
+          await addQuestion(
+            question.text,
+            question.choices,
+            question.correctIndex,
+            question.questionType,
+            user.name,
+            question.userAnswerIndex
+          );
+        }
       } catch (error) {
         console.error("Failed to update score:", error);
       }
@@ -190,7 +203,7 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({ selectedType }) => {
           </ScoreBoard>
           <MenuButton
             onClick={async () => {
-              await handleScoreUpdate();
+              await handleQuizEnd();
               navToHome();
             }}
           >

@@ -1,3 +1,6 @@
+import { useContext } from "react";
+import { useUser } from "../context/UserContext";
+
 const syncUserWithBackend = async (user: {
   name: string;
   points: number;
@@ -54,8 +57,43 @@ const updateUserScore = async (name: string, newScore: number) => {
   }
 };
 
+const addQuestion = async (
+  text: string,
+  choices: string[],
+  correctIndex: number,
+  category: string, // Category name as a string
+  userName: string, // Add userName explicitly
+  userAnswerIndex?: number | null
+) => {
+  try {
+    const response = await fetch("http://localhost:5000/api/questions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        text,
+        category,
+        choices,
+        correctIndex,
+        userName,
+        userAnswerIndex,
+      }),
+    });
+
+    if (response.ok) {
+      const result = await response.json();
+      console.log("Question added successfully:", result);
+    } else {
+      console.error("Failed to add question:", await response.text());
+    }
+  } catch (error) {
+    console.error("Error adding question:", error);
+  }
+};
+
 // Default export for syncUserWithBackend
 export default syncUserWithBackend;
 
 // Named export for updateUserScore
-export { updateUserScore };
+export { updateUserScore, addQuestion };
