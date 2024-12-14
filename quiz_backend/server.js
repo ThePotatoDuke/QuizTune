@@ -94,16 +94,24 @@ app.get("/questions", async (req, res) => {
 
 // Add a new question
 app.post("/questions", async (req, res) => {
-  const { text, category_id, choices, correct_index } = req.body;
+  const {
+    text,
+    category_id,
+    correct_answer,
+    user_answer = null,
+    choices = null,
+  } = req.body;
+
   try {
     const result = await pool.query(
-      `INSERT INTO Question (text, category_id, choices, correct_index) 
-      VALUES ($1, $2, $3, $4) RETURNING *`,
-      [text, category_id, choices, correct_index]
+      `INSERT INTO Question (text, category_id, correct_answer, user_answer, choices) 
+       VALUES ($1, $2, $3, $4, $5) RETURNING *`,
+      [text, category_id, correct_answer, user_answer, choices]
     );
+
     res.json(result.rows[0]);
   } catch (err) {
-    console.error(err.message);
+    console.error("Error inserting question:", err.message);
     res.status(500).send("Server error");
   }
 });
