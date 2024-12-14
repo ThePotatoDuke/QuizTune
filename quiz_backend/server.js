@@ -82,7 +82,7 @@ app.put("/api/updateScore", async (req, res) => {
 });
 
 // Get all questions
-app.get("/questions", async (req, res) => {
+app.get("api/questions", async (req, res) => {
   try {
     const result = await pool.query("SELECT * FROM Question");
     res.json(result.rows);
@@ -93,23 +93,49 @@ app.get("/questions", async (req, res) => {
 });
 
 // Add a new question
-app.post("/questions", async (req, res) => {
+app.post("/api/questions", async (req, res) => {
   const {
     text,
-    category_id,
-    correct_answer,
-    user_answer = null,
-    choices = null,
+    category, // Category as a string
+    choices,
+    correctIndex,
+    userName,
+    userAnswerIndex = null, // Optional field, default to null
   } = req.body;
 
   try {
-    const result = await pool.query(
-      `INSERT INTO Question (text, category_id, correct_answer, user_answer, choices) 
-       VALUES ($1, $2, $3, $4, $5) RETURNING *`,
-      [text, category_id, correct_answer, user_answer, choices]
+    // Query to get the category_id from the Category table using the category name
+    const categoryResult = await pool.query(
+      `SELECT id FROM "Category" WHERE name = $1`, // Find category by name
+      [category]
     );
 
-    res.json(result.rows[0]);
+    if (categoryResult.rows.length === 0) {
+      return res.status(400).json({ error: "Category not found" });
+    }
+
+    const category_id = categoryResult.rows[0].id; // Get the category id
+
+    // Query to get the user_id from the User table using the category name
+    const userResult = await pool.query(
+      `SELECT id FROM "User" WHERE name = $1`, // Find user by name
+      [userName]
+    );
+
+    if (userResult.rows.length === 0) {
+      return res.status(400).json({ error: "User not found" });
+    }
+
+    const user_id = userResult.rows[0].id; // Get the category id
+
+    // Insert the new question into the Question table
+    const result = await pool.query(
+      `INSERT INTO "Question" (user_id, text, category_id, choices, correct_index, user_answer_index) 
+       VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
+      [user_id, text, category_id, choices, correctIndex, userAnswerIndex]
+    );
+
+    res.json(result.rows[0]); // Return the inserted question
   } catch (err) {
     console.error("Error inserting question:", err.message);
     res.status(500).send("Server error");
