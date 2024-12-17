@@ -10,90 +10,103 @@ const Layout = styled.div`
 `;
 
 const HistoryContainer = styled.div`
- 	 padding: 20px;
+  padding: 20px;
 `;
 
 const HistoryCard = styled.div`
-	border: 1px solid #ddd;
-	padding: 20px;
-	margin-bottom: 15px;
-	border-radius: 10px;
-	background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  padding: 20px;
+  margin-bottom: 15px;
+  border-radius: 10px;
+  background-color: #f9f9f9;
 `;
 
 const CorrectAnswer = styled.span`
-	color: green;
-	font-weight: bold;
+  color: green;
+  font-weight: bold;
 `;
 
 const WrongAnswer = styled.span`
-	color: red;
-	font-weight: bold;
+  color: red;
+  font-weight: bold;
 `;
 
-interface HistoryItem {
-	id: number;
-	user_id: number | null;
-	category_id: number;
-	choices: string[];
-	correct_index: number;
-	user_answer_index: number;
-	text: string;
+const Button = styled.button`
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-top: 20px;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+`;
+
+interface AnsweredQuestion {
+  id: number;
+  text: string;
+  choices: string[];
+  correct_index: number;
+  user_answer_index: number;
 }
 
 const Progress: React.FC = () => {
+  const [answeredQuestions, setAnsweredQuestions] = useState<AnsweredQuestion[]>([]);
+  const navigate = useNavigate();
 
-	const [history, setHistory] = useState<HistoryItem[]>([]);
-	const navigate = useNavigate();
+  // Fetch answered questions from backend
+  useEffect(() => {
+    const fetchAnsweredQuestions = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/api/answeredQuestions");
+        if (!response.ok) {
+          throw new Error("Failed to fetch answered questions");
+        }
+        const data = await response.json();
+        setAnsweredQuestions(data);
+      } catch (error) {
+        console.error("Error fetching answered questions:", error);
+      }
+    };
 
-	useEffect(() => {
-			const fetchHistory = async () => {
-			try {
-				// Here is where the examples have to be changed with the actual data
-				const response = await fetch("/api/history"); 
-				const data = await response.json();
-				setHistory(data);
-			} catch (error) {
-				console.error("Error fetching history:", error);
-			}
-			};
-		
-			fetchHistory();
-		}, []);
+    fetchAnsweredQuestions();
+  }, []);
 
 	return (
 		<Container>
 		<Topheader />
 			<Layout>
 				<LeftSideBar></LeftSideBar>
-					<HistoryContainer>
-						<h1>History of Answered Questions</h1>
-						{history.length > 0 ? (
-							history.map((item) => (
-							<HistoryCard key={item.id}>
-								<p>
-								<strong>Question:</strong> {item.text}
-								</p>
-								<p>
-								<strong>Your Answer:</strong>{" "}
-								{item.choices[item.user_answer_index]}{" "}
-								{item.user_answer_index === item.correct_index ? (
-									<CorrectAnswer>(Correct)</CorrectAnswer>
-								) : (
-									<WrongAnswer>(Wrong)</WrongAnswer>
-								)}
-								</p>
-								<p>
-								<strong>Correct Answer:</strong>{" "}
-								<CorrectAnswer>{item.choices[item.correct_index]}</CorrectAnswer>
-								</p>
-							</HistoryCard>
-				))
-			) : (
-				<p>No history available.</p>
-			)}
-			<button onClick={() => navigate("/home")}>Back to Home</button>
-			</HistoryContainer>
+				<HistoryContainer>
+					<h1>Answered Questions History</h1>
+					{answeredQuestions.length > 0 ? (
+						answeredQuestions.map((item) => (
+						<HistoryCard key={item.id}>
+							<p>
+							<strong>Question:</strong> {item.text}
+							</p>
+							<p>
+							<strong>Your Answer:</strong> {item.choices[item.user_answer_index]}{" "}
+							{item.user_answer_index === item.correct_index ? (
+								<CorrectAnswer>(Correct)</CorrectAnswer>
+							) : (
+								<WrongAnswer>(Wrong)</WrongAnswer>
+							)}
+							</p>
+							<p>
+							<strong>Correct Answer:</strong>{" "}
+							<CorrectAnswer>{item.choices[item.correct_index]}</CorrectAnswer>
+							</p>
+						</HistoryCard>
+						))
+					) : (
+						<p>No answered questions found.</p>
+					)}
+					<Button onClick={() => navigate("/home")}>Back to Home</Button>
+				</HistoryContainer>
 			</Layout>
 		</Container>
 	);
