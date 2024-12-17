@@ -65,7 +65,7 @@ const LeftSideBar: React.FC<{ children?: React.ReactNode }> = ({ children }) => 
 		<Sidebar>
 		<SidebarLinks>
 			<NormalButton onClick={navToHome}>Home</NormalButton>
-			<NormalButton onClick={navToProgress}>Progress</NormalButton>
+			<NormalButton onClick={navToProgress}>History</NormalButton>
 			<li>Settings</li>
 			<LogoutButton onClick={handleLogout}>Logout</LogoutButton>
 		</SidebarLinks>
