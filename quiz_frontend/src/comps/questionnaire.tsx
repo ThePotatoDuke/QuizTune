@@ -54,7 +54,7 @@ const QuestionText = styled.div`
 const ScoreBoard = styled.div`
     margin-top: 20px;
     font-size: 3rem;
-    color: rgb(201, 166, 166);
+    color: rgb(166, 201, 186);
 `;
 
 const MenuButton = styled.button`
