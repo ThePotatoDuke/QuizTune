@@ -185,6 +185,7 @@ app.listen(PORT, () => {
   	console.log(`Server is running on http://localhost:${PORT}`);
 });
 
+// This guy gets all the answered questions form the DB
 app.get("/api/answeredQuestions", async (req, res) => {
 	try {
 		const result = await pool.query(
