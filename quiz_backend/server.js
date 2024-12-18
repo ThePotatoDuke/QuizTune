@@ -82,31 +82,6 @@ app.put("/api/updateScore", async (req, res) => {
   }
 });
 
-// Get all questions or filter by text
-app.get("api/questions", async (req, res) => {
-  const { text } = req.query;
-
-  try {
-    let result;
-    if (text) {
-      result = await pool.query('SELECT * FROM "Question" WHERE text LIKE $1', [
-        `%${text}%`,
-      ]);
-    } else {
-      result = await pool.query("SELECT * FROM Question");
-    }
-
-    if (result.rows.length === 0) {
-      return res.status(404).json({ error: "No questions found" });
-    }
-
-    res.status(200).json(result.rows);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send("Server error");
-  }
-});
-
 app.post("/api/questions", async (req, res) => {
   const { questions, userName } = req.body; // Expect an array of question objects
 
@@ -139,7 +114,7 @@ app.post("/api/questions", async (req, res) => {
 
     const quizResult = await pool.query(
       `INSERT INTO "Quiz" (name, user_id) 
-        VALUES ($1, $2) RETURNING id`,
+		VALUES ($1, $2) RETURNING id`,
       [`Quiz ${quizCtrCount + 1}`, user_id]
     );
 
@@ -182,7 +157,7 @@ app.post("/api/questions", async (req, res) => {
 
       const result = await pool.query(
         `INSERT INTO "Question" ( text, category_id, choices, correct_index, user_answer_index, quiz_id) 
-           VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
+		   VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
         [
           text,
           category_id,
@@ -199,6 +174,38 @@ app.post("/api/questions", async (req, res) => {
     res.json(results); // Return all inserted questions
   } catch (err) {
     console.error("Error inserting questions:", err.message);
+    res.status(500).send("Server error");
+  }
+});
+
+app.get("/api/quiz/:userName", async (req, res) => {
+  const { userName } = req.params;
+
+  try {
+    const userResult = await pool.query(
+      'SELECT id FROM "User" WHERE name = $1',
+      [userName]
+    );
+
+    if (userResult.rows.length === 0) {
+      return res.status(404).json({ message: `User '${userName}' not found` });
+    }
+
+    const user_id = userResult.rows[0].id;
+
+    const result = await pool.query('SELECT * FROM "Quiz" WHERE user_id = $1', [
+      user_id,
+    ]);
+
+    if (result.rows.length > 0) {
+      res.json(result.rows);
+    } else {
+      res
+        .status(404)
+        .json({ message: `No quizzes found for user '${userName}'` });
+    }
+  } catch (err) {
+    console.error("Error fetching quizzes for user:", err.message);
     res.status(500).send("Server error");
   }
 });
@@ -223,6 +230,31 @@ app.get("/api/users", async (req, res) => {
   } catch (error) {
     console.error("Error fetching users:", error);
     res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+app.get("/api/quiz/:quizId/questions", async (req, res) => {
+  const { quizId } = req.params;
+
+  try {
+    // Query to get all questions related to the quiz using quiz_id
+    const result = await pool.query(
+      'SELECT * FROM "Question" WHERE quiz_id = $1',
+      [quizId]
+    );
+
+    if (result.rows.length > 0) {
+      // Return all questions for the quiz
+      res.json(result.rows);
+    } else {
+      // If no questions are found for the quiz
+      res
+        .status(404)
+        .json({ message: `No questions found for quiz with id '${quizId}'` });
+    }
+  } catch (err) {
+    console.error("Error fetching questions for quiz:", err.message);
+    res.status(500).send("Server error");
   }
 });
 

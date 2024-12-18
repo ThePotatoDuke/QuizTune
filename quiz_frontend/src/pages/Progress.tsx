@@ -5,19 +5,19 @@ import styled from "styled-components";
 import Container from "../comps/Container";
 
 const Layout = styled.div`
-  	display: flex;
+  display: flex;
 `;
 
 const Progress: React.FC = () => {
-	return (
-		<Container>
-		<Topheader />
+  return (
+    <Container>
+      <Topheader />
 
-		<Layout>
-			<LeftSideBar></LeftSideBar>
-		</Layout>
-		</Container>
-	);
+      <Layout>
+        <LeftSideBar></LeftSideBar>
+      </Layout>
+    </Container>
+  );
 };
 
 export default Progress;
