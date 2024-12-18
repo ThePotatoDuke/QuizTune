@@ -11,6 +11,10 @@ const Layout = styled.div`
 const HistoryContainer = styled.div`
     flex-grow: 1;
     padding: 20px;
+
+	height: 86vh; /* Sets a fixed height relative to the viewport */
+	overflow-y: auto; /* Makes the container scrollable */
+
 `;
 
 const HistoryCard = styled.div`
