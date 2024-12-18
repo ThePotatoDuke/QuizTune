@@ -28,14 +28,14 @@ const Quiz: React.FC = () => {
 
 	return (
 		<Container gradient="linear-gradient(0deg,rgb(0, 0, 0),rgb(0, 168, 132))">
-		<Topheader></Topheader>
-		<Layout>
-			<LeftSideBar></LeftSideBar>
-			<MainContent>
-			<Questionnaire selectedType={questionType} ></Questionnaire>
-			{/*This is where the real deal is*/}
-			</MainContent>
-		</Layout>
+			<Topheader></Topheader>
+			<Layout>
+				<LeftSideBar></LeftSideBar>
+				<MainContent>
+					<Questionnaire selectedType={questionType} ></Questionnaire>
+					{/*This is where the real deal is*/}
+				</MainContent>
+			</Layout>
 		</Container>
 	);
 };

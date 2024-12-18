@@ -31,6 +31,7 @@ const Card = styled.div`
 const DashboardTitle = styled.h2`
     color:rgb(255, 255, 255);
     margin-bottom: 20px;
+	font-size: 2rem;
 `;
 
 const Home: React.FC = () => {

@@ -9,7 +9,9 @@ const Layout = styled.div`
 `;
 
 const HistoryTitle = styled.h1`
+    margin-bottom: 20px;
 	color: rgb(224, 244, 255);
+	font-size: 2rem;
 `;
 
 const HistoryContainer = styled.div`
@@ -40,10 +42,10 @@ const OptionsContainer = styled.div`
 const Option = styled.div<{ isCorrect: boolean; isSelected: boolean }>`
 	background-color: ${({ isCorrect, isSelected }) =>
 		isCorrect
-		? "rgb(26, 197, 49)" // Green for correct
-		: isSelected
-		? "rgb(224, 16, 16)" // Red for wrong
-		: "rgb(80, 80, 80)"};
+			? "rgb(26, 197, 49)" // Green for correct
+			: isSelected
+				? "rgb(224, 16, 16)" // Red for wrong
+				: "rgb(80, 80, 80)"};
 	flex: 1 1 200px; /* Makes each option grow and have a base width of 200px */
 	text-align: center;
 	padding: 10px;
@@ -77,16 +79,16 @@ const Progress: React.FC = () => {
 	// Fetch answered questions from backend
 	useEffect(() => {
 		const fetchAnsweredQuestions = async () => {
-		try {
-			const response = await fetch("http://localhost:5000/api/answeredQuestions");
-			if (!response.ok) {
-			throw new Error("Failed to fetch answered questions");
+			try {
+				const response = await fetch("http://localhost:5000/api/answeredQuestions");
+				if (!response.ok) {
+					throw new Error("Failed to fetch answered questions");
+				}
+				const data = await response.json();
+				setAnsweredQuestions(data);
+			} catch (error) {
+				console.error("Error fetching answered questions:", error);
 			}
-			const data = await response.json();
-			setAnsweredQuestions(data);
-		} catch (error) {
-			console.error("Error fetching answered questions:", error);
-		}
 		};
 
 		fetchAnsweredQuestions();
@@ -94,35 +96,35 @@ const Progress: React.FC = () => {
 
 	return (
 		<Container gradient="linear-gradient(0deg,rgb(0, 0, 0),rgb(5, 143, 255))">
-		<Topheader />
+			<Topheader />
 			<Layout>
 				<LeftSideBar></LeftSideBar>
-					<HistoryContainer>
+				<HistoryContainer>
 					<HistoryTitle>Answered Questions History</HistoryTitle>
 					{answeredQuestions.length > 0 ? (
 						answeredQuestions.map((item) => (
-						<HistoryCard key={item.id}>
-							<p>
-							<strong>Question:</strong> {item.text}
-							</p>
-							<OptionsContainer>
-							{item.choices.map((choice, index) => (
-									<Option
-									key={index}
-									isCorrect={index === item.correct_index}
-									isSelected={index === item.user_answer_index}
-								>
-									{choice.startsWith("http") ? ( // Too lazy to fetch questionType
-									<img
-										src={choice} alt={`Option ${index}`}
-									/>
-									) : (
-									<span>{choice}</span> // Shows the choices as text instead of images if it is not a link
-									)}
-								</Option>
-							))}
-							</OptionsContainer>
-						</HistoryCard>
+							<HistoryCard key={item.id}>
+								<p>
+									<strong>Question:</strong> {item.text}
+								</p>
+								<OptionsContainer>
+									{item.choices.map((choice, index) => (
+										<Option
+											key={index}
+											isCorrect={index === item.correct_index}
+											isSelected={index === item.user_answer_index}
+										>
+											{choice.startsWith("http") ? ( // Too lazy to fetch questionType
+												<img
+													src={choice} alt={`Option ${index}`}
+												/>
+											) : (
+												<span>{choice}</span> // Shows the choices as text instead of images if it is not a link
+											)}
+										</Option>
+									))}
+								</OptionsContainer>
+							</HistoryCard>
 						))
 					) : (
 						<p>No answered questions found.</p>
