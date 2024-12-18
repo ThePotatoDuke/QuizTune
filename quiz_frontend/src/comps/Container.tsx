@@ -6,7 +6,7 @@ import background from "../pages/background.jpg";
 interface GradientContainerProps {
     gradient: string; // Gradient string passed as a prop
     children: React.ReactNode;
-  }
+}
 
 const StyledContainer = styled.div<{ gradient: string }>`
     display: flex;
@@ -22,10 +22,10 @@ const StyledContainer = styled.div<{ gradient: string }>`
 `;
 
 const Container: React.FC<GradientContainerProps> = ({
-  gradient,
-  children,
-}) => {
-  return <StyledContainer gradient={gradient}>{children}</StyledContainer>;
+	gradient,
+	children,
+	}) => {
+	return <StyledContainer gradient={gradient}>{children}</StyledContainer>;
 };
 
 export default Container;
