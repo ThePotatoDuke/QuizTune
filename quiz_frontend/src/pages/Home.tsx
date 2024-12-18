@@ -29,7 +29,7 @@ const Card = styled.div`
 `;
 
 const DashboardTitle = styled.h2`
-    color:rgb(0, 0, 0);
+    color:rgb(255, 255, 255);
     margin-bottom: 20px;
 `;
 
@@ -42,7 +42,7 @@ const navToQuiz = (type: string) => {
 };
 
 	return (
-		<Container>
+		<Container gradient="linear-gradient(0deg,rgb(0, 0, 0),rgb(5, 143, 0))">
 		<Topheader></Topheader>
 		<Layout>
 			<LeftSideBar></LeftSideBar>

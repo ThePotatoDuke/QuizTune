@@ -8,6 +8,10 @@ const Layout = styled.div`
   	display: flex;
 `;
 
+const HistoryTitle = styled.h1`
+	color: rgb(224, 244, 255);
+`;
+
 const HistoryContainer = styled.div`
     flex-grow: 1;
     padding: 20px;
@@ -89,12 +93,12 @@ const Progress: React.FC = () => {
 	}, []);
 
 	return (
-		<Container>
+		<Container gradient="linear-gradient(0deg,rgb(0, 0, 0),rgb(5, 143, 255))">
 		<Topheader />
 			<Layout>
 				<LeftSideBar></LeftSideBar>
 					<HistoryContainer>
-					<h1>Answered Questions History</h1>
+					<HistoryTitle>Answered Questions History</HistoryTitle>
 					{answeredQuestions.length > 0 ? (
 						answeredQuestions.map((item) => (
 						<HistoryCard key={item.id}>

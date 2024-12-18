@@ -41,13 +41,20 @@ const ChoiceButton = styled.button<{
 const ResultMessage = styled.div`
     margin-top: 20px;
     font-size: 1.2rem;
-    color: #333;
+    color: rgb(255, 255, 255);
+`;
+
+const QuestionText = styled.div`
+    margin-top: 20px;
+    margin-bottom: 20px;
+    font-size: 2rem;
+    color: rgb(192, 201, 166);
 `;
 
 const ScoreBoard = styled.div`
     margin-top: 20px;
     font-size: 2rem;
-    color: black;
+    color: rgb(201, 166, 166);
 `;
 
 const MenuButton = styled.button`
@@ -215,7 +222,7 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({ selectedType }) => {
         ) : (
             <>
             <div>
-                <h1>{questions[currentQuestion].text}</h1>
+                <QuestionText>{questions[currentQuestion].text}</QuestionText>
 
                 <div>
                 {questions[currentQuestion].choices.map((choice, index) => (
