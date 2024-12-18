@@ -22,7 +22,7 @@ const HistoryCard = styled.div`
 	padding: 20px;
 	margin-bottom: 15px;
 	border-radius: 10px;
-	background-color:rgb(34, 34, 34);
+	background-color:rgba(46, 46, 46, 0.91);
 	color: rgb(255, 255, 255);
 	border: 1px solid rgb(102, 102, 102);
 `;

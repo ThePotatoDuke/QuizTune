@@ -14,18 +14,20 @@ const ChoiceButton = styled.button<{
   isSelected?: boolean;
 }>`
     background-color: ${({ isSelected, isCorrect }) =>
-        isSelected ? (isCorrect ? "#4caf50" : "#e74c3c") : "#f9f9f9"};
-    border: 1px solid #ccc;
+        isSelected ? (isCorrect ? "rgb(4, 219, 68)" : "rgb(219, 0, 0)") : "rgb(71, 71, 71)"};
+    border: 1px solid rgb(129, 129, 129);
+    color: white;
     padding: 20px;
     font-size: 1rem;
     cursor: ${({ isSelected }) => (isSelected ? "not-allowed" : "pointer")};
     border-radius: 20px;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
+    transition: all 0.5s ease;
     margin: 20px;
 
     &:hover {
         background-color: ${({ isSelected }) => (isSelected ? "" : "#ddd")};
+        color: black;
     }
 
     img {
