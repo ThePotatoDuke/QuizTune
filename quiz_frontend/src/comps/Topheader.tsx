@@ -4,7 +4,7 @@ import token from "../pages/token.png";
 import { useUser } from "../context/UserContext";
 
 const Header = styled.header`
-	background-color: black;
+	background-color: rgb(36, 36, 36);
 	padding: 20px;
 	color: white;
 	text-align: left;

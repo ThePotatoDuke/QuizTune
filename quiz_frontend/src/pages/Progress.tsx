@@ -18,7 +18,9 @@ const HistoryCard = styled.div`
 	padding: 20px;
 	margin-bottom: 15px;
 	border-radius: 10px;
-	background-color:rgb(255, 255, 255);
+	background-color:rgb(34, 34, 34);
+	color: rgb(255, 255, 255);
+	border: 1px solid rgb(102, 102, 102);
 `;
 
 const OptionsContainer = styled.div`
@@ -30,22 +32,20 @@ const OptionsContainer = styled.div`
 const Option = styled.div<{ isCorrect: boolean; isSelected: boolean }>`
 	background-color: ${({ isCorrect, isSelected }) =>
 		isCorrect
-		? "#4caf50" // Green for correct
+		? "rgb(26, 197, 49)" // Green for correct
 		: isSelected
-		? "#e74c3c" // Red for wrong
-		: "#f9f9f9"};
+		? "rgb(224, 16, 16)" // Red for wrong
+		: "rgb(80, 80, 80)"};
 	flex: 1 1 200px; /* Makes each option grow and have a base width of 200px */
 	text-align: center;
 	padding: 10px;
 	border-radius: 20px;
 	color: ${({ isCorrect, isSelected }) =>
-		isCorrect || isSelected ? "white" : "black"};
+		isCorrect || isSelected ? "white" : "white"};
 	font-weight: ${({ isCorrect, isSelected }) =>
 		isCorrect || isSelected ? "bold" : "normal"};
-	border: 2px solid rgb(136, 136, 136);
+	border: 1px solid rgb(160, 160, 160);
 	margin: 8px;
-
-
 
 	img {
         width: 250px;
@@ -53,9 +53,7 @@ const Option = styled.div<{ isCorrect: boolean; isSelected: boolean }>`
         object-fit: cover;
         border-radius: 20px;
     }
-
 `;
-
 
 interface AnsweredQuestion {
 	id: number;
@@ -67,7 +65,6 @@ interface AnsweredQuestion {
 
 const Progress: React.FC = () => {
 	const [answeredQuestions, setAnsweredQuestions] = useState<AnsweredQuestion[]>([]);
-
 
 	// Fetch answered questions from backend
 	useEffect(() => {

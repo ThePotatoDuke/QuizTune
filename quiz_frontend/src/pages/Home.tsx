@@ -27,7 +27,7 @@ const Card = styled.div`
 `;
 
 const DashboardTitle = styled.h2`
-    color: #333;
+    color:rgb(100, 100, 100);
     margin-bottom: 20px;
 `;
 
