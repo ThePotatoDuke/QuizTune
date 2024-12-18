@@ -188,8 +188,9 @@ app.listen(PORT, () => {
 // This guy gets all the answered questions form the DB
 app.get("/api/answeredQuestions", async (req, res) => {
 	try {
+		// Does the ordering in a way where its shows the latest on top
 		const result = await pool.query(
-		`SELECT * FROM "Question" WHERE user_answer_index IS NOT NULL`
+		`SELECT * FROM "Question" WHERE user_answer_index IS NOT NULL ORDER BY id DESC` 
 		);
 
 		if (result.rows.length === 0) {
