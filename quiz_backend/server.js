@@ -107,52 +107,98 @@ app.get("api/questions", async (req, res) => {
   }
 });
 
-// Add a new question
 app.post("/api/questions", async (req, res) => {
-  const {
-    text,
-    category, // Category as a string
-    choices,
-    correctIndex,
-    userName,
-    userAnswerIndex = null, // Optional field, default to null
-  } = req.body;
+  const { questions, userName } = req.body; // Expect an array of question objects
 
+  if (!Array.isArray(questions)) {
+    return res
+      .status(400)
+      .json({ error: "Input should be an array of questions" });
+  }
   try {
-    // Query to get the category_id from the Category table using the category name
-    const categoryResult = await pool.query(
-      `SELECT id FROM "Category" WHERE name = $1`, // Find category by name
-      [category]
-    );
+    const results = [];
 
-    if (categoryResult.rows.length === 0) {
-      return res.status(400).json({ error: "Category not found" });
-    }
-
-    const category_id = categoryResult.rows[0].id; // Get the category id
-
-    // Query to get the user_id from the User table using the category name
+    // Query to get the user_id from the User table using the user name
     const userResult = await pool.query(
-      `SELECT id FROM "User" WHERE name = $1`, // Find user by name
+      `SELECT id FROM "User" WHERE name = $1`,
       [userName]
     );
 
     if (userResult.rows.length === 0) {
-      return res.status(400).json({ error: "User not found" });
+      return res.status(400).json({ error: `User '${userName}' not found` });
     }
 
-    const user_id = userResult.rows[0].id; // Get the category id
+    const user_id = userResult.rows[0].id;
 
-    // Insert the new question into the Question table
-    const result = await pool.query(
-      `INSERT INTO "Question" (user_id, text, category_id, choices, correct_index, user_answer_index) 
-       VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
-      [user_id, text, category_id, choices, correctIndex, userAnswerIndex]
+    const quizCtrResult = await pool.query(
+      `SELECT COUNT(*) AS quiz_count FROM "Quiz" WHERE user_id = $1`,
+      [user_id]
     );
 
-    res.json(result.rows[0]); // Return the inserted question
+    const quizCtrCount = parseInt(quizCtrResult.rows[0].quiz_count, 10);
+
+    const quizResult = await pool.query(
+      `INSERT INTO "Quiz" (name, user_id) 
+        VALUES ($1, $2) RETURNING id`,
+      [`Quiz ${quizCtrCount + 1}`, user_id]
+    );
+
+    // Extract the quiz_id
+    const quiz_id = quizResult.rows[0].id; // Ensure there is at least one row in the result
+
+    for (const question of questions) {
+      const {
+        text,
+        category,
+        choices,
+        correctIndex,
+        userAnswerIndex = null,
+      } = question;
+
+      // Validation for each question
+      if (
+        !text ||
+        !category ||
+        !Array.isArray(choices) ||
+        typeof correctIndex !== "number" ||
+        !userName
+      ) {
+        return res.status(400).json({ error: "Invalid question format" });
+      }
+
+      // Query to get the category_id from the Category table using the category name
+      const categoryResult = await pool.query(
+        `SELECT id FROM "Category" WHERE name = $1`,
+        [category]
+      );
+
+      if (categoryResult.rows.length === 0) {
+        return res
+          .status(400)
+          .json({ error: `Category '${category}' not found` });
+      }
+
+      const category_id = categoryResult.rows[0].id;
+
+      const result = await pool.query(
+        `INSERT INTO "Question" ( text, category_id, choices, correct_index, user_answer_index, quiz_id) 
+           VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
+        [
+          text,
+          category_id,
+          choices,
+          correctIndex,
+          userAnswerIndex,
+          quiz_id, // Use the extracted quiz_id here
+        ]
+      );
+
+      results.push(result.rows[0]); // Collect the inserted question
+    }
+
+    res.json(results); // Return all inserted questions
   } catch (err) {
-    console.error("Error inserting question:", err.message);
+    console.error("Error inserting questions:", err.message);
     res.status(500).send("Server error");
   }
 });

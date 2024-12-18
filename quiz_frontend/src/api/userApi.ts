@@ -56,39 +56,31 @@ const updateUserScore = async (name: string, newScore: number) => {
     throw error;
   }
 };
-
-const addQuestion = async (
-  text: string,
-  choices: string[],
-  correctIndex: number,
-  category: string, // Category name as a string
-  userName: string, // Add userName explicitly
-  userAnswerIndex?: number | null
-) => {
+interface Question {
+  text: string;
+  choices: string[];
+  correctIndex: number;
+  category: string;
+  userAnswerIndex?: number | null;
+}
+const addQuestion = async (questions: Question[], userName: string) => {
   try {
     const response = await fetch("http://localhost:5000/api/questions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        text,
-        category,
-        choices,
-        correctIndex,
-        userName,
-        userAnswerIndex,
-      }),
+      body: JSON.stringify({ questions, userName }), // Send the array directly
     });
 
     if (response.ok) {
       const result = await response.json();
-      console.log("Question added successfully:", result);
+      console.log("Questions added successfully:", result);
     } else {
-      console.error("Failed to add question:", await response.text());
+      console.error("Failed to add questions:", await response.text());
     }
   } catch (error) {
-    console.error("Error adding question:", error);
+    console.error("Error adding questions:", error);
   }
 };
 
