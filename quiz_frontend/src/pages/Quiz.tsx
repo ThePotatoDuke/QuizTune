@@ -27,7 +27,7 @@ const Quiz: React.FC = () => {
 	}
 
 	return (
-		<Container gradient="linear-gradient(0deg,rgb(0, 0, 0),rgb(168, 0, 0))">
+		<Container gradient="linear-gradient(0deg,rgb(0, 0, 0),rgb(0, 168, 132))">
 		<Topheader></Topheader>
 		<Layout>
 			<LeftSideBar></LeftSideBar>

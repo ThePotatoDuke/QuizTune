@@ -18,7 +18,7 @@ const ChoiceButton = styled.button<{
     border: 1px solid rgb(129, 129, 129);
     color: white;
     padding: 20px;
-    font-size: 1rem;
+    font-size: 1.8rem;
     cursor: ${({ isSelected }) => (isSelected ? "not-allowed" : "pointer")};
     border-radius: 20px;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
@@ -40,20 +40,20 @@ const ChoiceButton = styled.button<{
 
 const ResultMessage = styled.div`
     margin-top: 20px;
-    font-size: 1.2rem;
+    font-size: 1.7rem;
     color: rgb(255, 255, 255);
 `;
 
 const QuestionText = styled.div`
     margin-top: 20px;
     margin-bottom: 20px;
-    font-size: 2rem;
-    color: rgb(192, 201, 166);
+    font-size: 4rem;
+    color: rgb(221, 248, 255);
 `;
 
 const ScoreBoard = styled.div`
     margin-top: 20px;
-    font-size: 2rem;
+    font-size: 3rem;
     color: rgb(201, 166, 166);
 `;
 
@@ -206,7 +206,7 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({ selectedType }) => {
         <div>
         {isQuizOver ? (
             <div>
-            <h1>Quiz Completed!</h1>
+            <QuestionText>Quiz Completed!</QuestionText>
             <ScoreBoard>
                 Your Score: {score} / {questions.length * 10}
             </ScoreBoard>
@@ -247,7 +247,7 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({ selectedType }) => {
                     <ResultMessage
                     style={{
                         marginTop: "20px",
-                        fontSize: "1.5rem",
+                        fontSize: "2rem",
                         color: isCorrect ? "green" : "red",
                     }}
                     >
