@@ -5,6 +5,7 @@ import Container from "../comps/Container";
 import { getUserQuizzes } from "../api/userApi";
 import { useUser } from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
+import { styled } from "styled-components";
 
 const Layout = styled.div`
   display: flex;
@@ -43,7 +44,7 @@ const Progress: React.FC = () => {
   };
 
   return (
-    <Container>
+    <Container gradient="linear-gradient(0deg, rgb(0, 0, 0), rgb(5, 143, 255))">
       <Topheader />
       <Layout>
         <LeftSideBar />
