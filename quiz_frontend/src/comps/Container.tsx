@@ -3,18 +3,29 @@ import React from "react";
 import styled from "styled-components";
 import background from "../pages/background.jpg";
 
-const Container = styled.div`
+interface GradientContainerProps {
+    gradient: string; // Gradient string passed as a prop
+    children: React.ReactNode;
+}
+
+const StyledContainer = styled.div<{ gradient: string }>`
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    background-image: url(${background});
-    background-size: cover;
-    background-position: center;
     font-family: Arial, sans-serif;
+    background: ${({ gradient }) => gradient};
+    transition: background 5s ease-in-out;
 
     @media (max-width: 768px) {
         background-size: contain;
     }
 `;
+
+const Container: React.FC<GradientContainerProps> = ({
+	gradient,
+	children,
+	}) => {
+	return <StyledContainer gradient={gradient}>{children}</StyledContainer>;
+};
 
 export default Container;

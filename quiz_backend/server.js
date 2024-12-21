@@ -263,3 +263,22 @@ app.get("/api/quiz/:quizId/questions", async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
+
+// This guy gets all the answered questions form the DB
+app.get("/api/answeredQuestions", async (req, res) => {
+  try {
+    // Does the ordering in a way where its shows the latest on top
+    const result = await pool.query(
+      `SELECT * FROM "Question" WHERE user_answer_index IS NOT NULL ORDER BY id DESC`
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "No answered questions found" });
+    }
+
+    res.status(200).json(result.rows);
+  } catch (err) {
+    console.error("Error fetching answered questions:", err.message);
+    res.status(500).send("Server error");
+  }
+});

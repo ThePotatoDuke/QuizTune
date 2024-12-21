@@ -14,18 +14,24 @@ const ChoiceButton = styled.button<{
   isSelected?: boolean;
 }>`
   background-color: ${({ isSelected, isCorrect }) =>
-    isSelected ? (isCorrect ? "#4caf50" : "#e74c3c") : "#f9f9f9"};
-  border: 1px solid #ccc;
+    isSelected
+      ? isCorrect
+        ? "rgb(4, 219, 68)"
+        : "rgb(219, 0, 0)"
+      : "rgb(71, 71, 71)"};
+  border: 1px solid rgb(129, 129, 129);
+  color: white;
   padding: 20px;
-  font-size: 1rem;
+  font-size: 1.8rem;
   cursor: ${({ isSelected }) => (isSelected ? "not-allowed" : "pointer")};
   border-radius: 20px;
-  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
+  transition: all 0.5s ease;
   margin: 20px;
 
   &:hover {
     background-color: ${({ isSelected }) => (isSelected ? "" : "#ddd")};
+    color: black;
   }
 
   img {
@@ -38,20 +44,27 @@ const ChoiceButton = styled.button<{
 
 const ResultMessage = styled.div`
   margin-top: 20px;
-  font-size: 1.2rem;
-  color: #333;
+  font-size: 1.7rem;
+  color: rgb(255, 255, 255);
+`;
+
+const QuestionText = styled.div`
+  margin-top: 20px;
+  margin-bottom: 20px;
+  font-size: 4rem;
+  color: rgb(221, 248, 255);
 `;
 
 const ScoreBoard = styled.div`
   margin-top: 20px;
-  font-size: 2rem;
-  color: black;
+  font-size: 3rem;
+  color: rgb(166, 201, 186);
 `;
 
 const MenuButton = styled.button`
   margin-top: 20px;
   padding: 10px 20px;
-  background-color: #007bff;
+  background-color: rgb(0, 123, 255);
   color: white;
   border: none;
   border-radius: 5px;
@@ -60,7 +73,7 @@ const MenuButton = styled.button`
   transition: background-color 0.3s;
 
   &:hover {
-    background-color: #0056b3;
+    background-color: rgb(0, 123, 255);
   }
 `;
 
@@ -199,7 +212,7 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({ selectedType }) => {
     <div>
       {isQuizOver ? (
         <div>
-          <h1>Quiz Completed!</h1>
+          <QuestionText>Quiz Completed!</QuestionText>
           <ScoreBoard>
             Your Score: {score} / {questions.length * 10}
           </ScoreBoard>
@@ -215,7 +228,7 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({ selectedType }) => {
       ) : (
         <>
           <div>
-            <h1>{questions[currentQuestion].text}</h1>
+            <QuestionText>{questions[currentQuestion].text}</QuestionText>
 
             <div>
               {questions[currentQuestion].choices.map((choice, index) => (
@@ -240,7 +253,7 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({ selectedType }) => {
                 <ResultMessage
                   style={{
                     marginTop: "20px",
-                    fontSize: "1.5rem",
+                    fontSize: "2rem",
                     color: isCorrect ? "green" : "red",
                   }}
                 >

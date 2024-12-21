@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Topheader from "../comps/Topheader";
 import LeftSideBar from "../comps/leftSidebar";
-import styled from "styled-components";
 import Container from "../comps/Container";
 import { getUserQuizzes } from "../api/userApi";
 import { useUser } from "../context/UserContext";

@@ -16,19 +16,22 @@ const Layout = styled.div`
 `;
 
 const Card = styled.div`
-    background-color: white;
+    background-color: rgb(71, 71, 71);
+	color: rgb(255, 255, 255);
     border-radius: 8px;
     padding: 20px;
     margin: 10px 0;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+    transition: all 0.5s ease;
     &:hover {
-      background: grey;
+      background: rgb(50, 121, 77);
     }
 `;
 
 const DashboardTitle = styled.h2`
-    color: #333;
+    color:rgb(255, 255, 255);
     margin-bottom: 20px;
+	font-size: 2rem;
 `;
 
 const Home: React.FC = () => {
@@ -40,7 +43,7 @@ const navToQuiz = (type: string) => {
 };
 
 	return (
-		<Container>
+		<Container gradient="linear-gradient(0deg,rgb(0, 0, 0),rgb(5, 143, 0))">
 		<Topheader></Topheader>
 		<Layout>
 			<LeftSideBar></LeftSideBar>

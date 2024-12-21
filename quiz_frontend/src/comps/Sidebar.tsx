@@ -3,7 +3,7 @@ import React from "react";
 import styled from "styled-components";
 
 const Sidebar = styled.nav`
-    background-color: #333;
+    background-color: rgb(36, 36, 36);
     color: white;
     width: 250px;
     min-height: calc(100vh - 90px); /* Adjust for header height */
