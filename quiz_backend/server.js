@@ -233,6 +233,7 @@ app.get("/api/users", async (req, res) => {
   }
 });
 
+//get questions of quiz
 app.get("/api/quiz/:quizId/questions", async (req, res) => {
   const { quizId } = req.params;
 

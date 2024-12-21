@@ -56,6 +56,7 @@ const updateUserScore = async (name: string, newScore: number) => {
     throw error;
   }
 };
+
 interface Question {
   text: string;
   choices: string[];
@@ -84,8 +85,26 @@ const addQuestion = async (questions: Question[], userName: string) => {
   }
 };
 
+const getUserQuizzes = async (userName: string) => {
+  try {
+    const response = await fetch(`http://localhost:5000/api/quiz/${userName}`);
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch quizzes for user: ${userName}`);
+    }
+
+    const quizzes = await response.json();
+    console.log(`Quizzes for ${userName}:`, quizzes);
+
+    return quizzes; // Return the quizzes for further use
+  } catch (error) {
+    console.error("Error fetching quizzes:", error);
+    throw error; // Re-throw the error for higher-level handling
+  }
+};
+
 // Default export for syncUserWithBackend
 export default syncUserWithBackend;
 
 // Named export for updateUserScore
-export { updateUserScore, addQuestion };
+export { updateUserScore, addQuestion, getUserQuizzes };
