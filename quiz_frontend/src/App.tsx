@@ -8,6 +8,7 @@ import Home from "./pages/Home";
 import Quiz from "./pages/Quiz";
 import Progress from "./pages/Progress";
 import { UserProvider } from "./context/UserContext";
+import QuizQuestions from "./pages/QuizQuestions";
 
 const App: React.FC = () => {
   return (
@@ -18,6 +19,7 @@ const App: React.FC = () => {
           <Route path="/home" element={<Home />} />
           <Route path="/quiz" element={<Quiz />} />
           <Route path="/progress" element={<Progress />} />
+          <Route path="/quiz/:quizId/questions" element={<QuizQuestions />} />
         </Routes>
       </Router>
     </UserProvider>

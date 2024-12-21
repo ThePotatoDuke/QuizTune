@@ -103,6 +103,26 @@ const getUserQuizzes = async (userName: string) => {
   }
 };
 
+export const getQuizQuestions = async (quizId: Number) => {
+  try {
+    const response = await fetch(
+      `http://localhost:5000/api/quiz/${quizId}/questions`
+    );
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch questions for quiz: ${quizId}`);
+    }
+
+    const questions = await response.json();
+    console.log(`Questions for quiz ${quizId}:`, questions);
+
+    return questions; // Return the questions for further use
+  } catch (error) {
+    console.error("Error fetching quiz questions:", error);
+    throw error; // Re-throw the error for higher-level handling
+  }
+};
+
 // Default export for syncUserWithBackend
 export default syncUserWithBackend;
 
