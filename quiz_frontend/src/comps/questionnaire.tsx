@@ -70,7 +70,7 @@ interface Question {
   correctIndex: number;
   userAnswerIndex?: number | null;
   track?: any;
-  questionType: string;
+  category: string;
 }
 
 interface QuestionnaireProps {
@@ -106,7 +106,7 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({ selectedType }) => {
 
         const generatedQuestions: Question[] = await Promise.all(
           tracks.slice(0, maxQuestions).map(async (track) => {
-            const questionType =
+            const category =
               selectedType === "random"
                 ? ["release_date", "artist", "popularity", "album_cover"][
                     Math.floor(Math.random() * 4)
@@ -115,12 +115,12 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({ selectedType }) => {
 
             const { question, correctAnswer } = generateTrackQuestion(
               track,
-              questionType
+              category
             );
 
             const answerOptions = generateAnswerOptions(
               correctAnswer,
-              questionType,
+              category,
               tracks
             );
 
@@ -131,7 +131,7 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({ selectedType }) => {
               choices: textOptions,
               correctIndex: textOptions.indexOf(String(correctAnswer)),
               track,
-              questionType,
+              category,
             };
           })
         );
@@ -171,24 +171,26 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({ selectedType }) => {
   const handleQuizEnd = async () => {
     if (user) {
       try {
+        // Update user score
         const updatedUser = await updateUserScore(
           user.name,
           Number(user.points) + score
         );
         setUser({ ...user, points: updatedUser.score });
 
-        for (const question of questions) {
-          await addQuestion(
-            question.text,
-            question.choices,
-            question.correctIndex,
-            question.questionType,
-            user.name,
-            question.userAnswerIndex
-          );
-        }
+        // Prepare questions array
+        const questionsPayload = questions.map((question) => ({
+          text: question.text,
+          choices: question.choices,
+          correctIndex: question.correctIndex,
+          category: question.category,
+          userAnswerIndex: question.userAnswerIndex || null,
+        }));
+
+        // Send questions in a single API call
+        await addQuestion(questionsPayload, user.name);
       } catch (error) {
-        console.error("Failed to update score:", error);
+        console.error("Failed to update score or add questions:", error);
       }
     }
   };
@@ -223,7 +225,7 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({ selectedType }) => {
                   isSelected={selected === index}
                   isCorrect={index === questions[currentQuestion].correctIndex}
                 >
-                  {questions[currentQuestion].questionType === "album_cover" ? (
+                  {questions[currentQuestion].category === "album_cover" ? (
                     <img src={choice} alt={`Choice ${index}`} />
                   ) : (
                     <span>{choice}</span>
