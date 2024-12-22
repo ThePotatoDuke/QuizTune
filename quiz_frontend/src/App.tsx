@@ -6,7 +6,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./pages/Login";
 import Home from "./pages/Home";
 import Quiz from "./pages/Quiz";
-import Progress from "./pages/Progress";
+import Progress from "./pages/History";
 import { UserProvider } from "./context/UserContext";
 import QuizQuestions from "./pages/QuizQuestions";
 
