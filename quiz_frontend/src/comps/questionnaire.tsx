@@ -98,7 +98,7 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({ selectedType }) => {
   const [selected, setSelected] = useState<number | null>(null);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
 
-  const maxQuestions = 2;
+  const maxQuestions = 10;
   const navigate = useNavigate();
 
   useEffect(() => {

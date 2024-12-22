@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Topheader from "../comps/Topheader";
-import LeftSideBar from "../comps/leftSidebar";
+import LeftSideBar from "../comps/LeftSidebar";
 import Container from "../comps/Container";
 import { getUserQuizzes, getUserStats } from "../api/userApi";
 import { useUser } from "../context/UserContext";

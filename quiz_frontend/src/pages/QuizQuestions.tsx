@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom"; // Import useParams to get the qui
 import { getQuizQuestions } from "../api/userApi";
 import Container from "../comps/Container";
 import Topheader from "../comps/Topheader";
-import LeftSideBar from "../comps/leftSidebar";
+import LeftSideBar from "../comps/LeftSidebar";
 import { styled } from "styled-components";
 // Define this function for fetching questions
 

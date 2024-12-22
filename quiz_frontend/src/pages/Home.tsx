@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import Topheader from "../comps/Topheader";
-import LeftSideBar from "../comps/leftSidebar";
+import LeftSideBar from "../comps/LeftSidebar";
 import RightSidebar from "../comps/rightSidebar";
 import Container from "../comps/Container";
 
