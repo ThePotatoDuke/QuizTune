@@ -197,7 +197,7 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({ selectedType }) => {
           choices: question.choices,
           correctIndex: question.correctIndex,
           category: question.category,
-          userAnswerIndex: question.userAnswerIndex || null,
+          userAnswerIndex: question.userAnswerIndex,
         }));
 
         // Send questions in a single API call
