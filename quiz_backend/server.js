@@ -158,20 +158,13 @@ app.post("/api/questions", async (req, res) => {
       const result = await pool.query(
         `INSERT INTO "Question" ( text, category_id, choices, correct_index, user_answer_index, quiz_id) 
 		   VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
-        [
-          text,
-          category_id,
-          choices,
-          correctIndex,
-          userAnswerIndex,
-          quiz_id, // Use the extracted quiz_id here
-        ]
+        [text, category_id, choices, correctIndex, userAnswerIndex, quiz_id]
       );
 
-      results.push(result.rows[0]); // Collect the inserted question
+      results.push(result.rows[0]);
     }
 
-    res.json(results); // Return all inserted questions
+    res.json(results);
   } catch (err) {
     console.error("Error inserting questions:", err.message);
     res.status(500).send("Server error");
@@ -259,26 +252,46 @@ app.get("/api/quiz/:quizId/questions", async (req, res) => {
   }
 });
 
+app.get("/api/stats/:userName", async (req, res) => {
+  const { userName } = req.params;
+
+  try {
+    const userResult = await pool.query(
+      'SELECT id FROM "User" WHERE name = $1',
+      [userName]
+    );
+
+    if (userResult.rows.length === 0) {
+      return res.status(404).json({ message: `User '${userName}' not found` });
+    }
+
+    const userId = userResult.rows[0].id;
+    const statsResult = await pool.query(
+      `
+      SELECT 
+        q.type AS question_type,
+        COUNT(q.id) AS total_questions,
+        SUM(CASE WHEN q.correct_index = aq.user_answer_index THEN 1 ELSE 0 END) AS correct_answers
+      FROM "Question" q
+      JOIN "Quiz" quiz ON q.quiz_id = quiz.id
+      WHERE quiz.user_id = $1
+      GROUP BY q.type
+      `,
+      [userId]
+    );
+
+    if (statsResult.rows.length === 0) {
+      return res.status(404).json({ message: "No stats found for this user." });
+    }
+
+    res.json(statsResult.rows);
+  } catch (err) {
+    console.error("Error fetching stats:", err.message);
+    res.status(500).send("Server error");
+  }
+});
+
 // Start the server
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
-});
-
-// This guy gets all the answered questions form the DB
-app.get("/api/answeredQuestions", async (req, res) => {
-  try {
-    // Does the ordering in a way where its shows the latest on top
-    const result = await pool.query(
-      `SELECT * FROM "Question" WHERE user_answer_index IS NOT NULL ORDER BY id DESC`
-    );
-
-    if (result.rows.length === 0) {
-      return res.status(404).json({ error: "No answered questions found" });
-    }
-
-    res.status(200).json(result.rows);
-  } catch (err) {
-    console.error("Error fetching answered questions:", err.message);
-    res.status(500).send("Server error");
-  }
 });

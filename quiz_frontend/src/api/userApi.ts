@@ -123,6 +123,26 @@ export const getQuizQuestions = async (quizId: Number) => {
   }
 };
 
+export const getUserStats = async (userName: string) => {
+  try {
+    const response = await fetch(
+      `http://localhost:5000//api/stats/${userName}`
+    );
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch stats for user: ${userName}`);
+    }
+
+    const stats = await response.json();
+    console.log(`Stats for user ${userName}:`, stats);
+
+    return stats;
+  } catch (error) {
+    console.error("Error fetching user stats:", error);
+    throw error;
+  }
+};
+
 // Default export for syncUserWithBackend
 export default syncUserWithBackend;
 

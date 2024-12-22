@@ -2,10 +2,11 @@ import React, { useEffect, useState } from "react";
 import Topheader from "../comps/Topheader";
 import LeftSideBar from "../comps/leftSidebar";
 import Container from "../comps/Container";
-import { getUserQuizzes } from "../api/userApi";
+import { getUserQuizzes, getUserStats } from "../api/userApi";
 import { useUser } from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
+import Sidebar from "../comps/Sidebar";
 
 const Layout = styled.div`
   display: flex;
@@ -20,23 +21,35 @@ const Progress: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const { user } = useUser(); // Get user from context
   const navigate = useNavigate(); // Hook to navigate to quiz question page
+  const [stats, setStats] = useState<
+    {
+      question_type: string;
+      total_questions: number;
+      correct_answers: number;
+    }[]
+  >([]);
 
   useEffect(() => {
-    const fetchQuizzes = async () => {
+    const fetchUserData = async () => {
       if (!user) {
         setError("User not found.");
         return; // Early return if user is null
       }
 
       try {
-        const data = await getUserQuizzes(user.name); // Use dynamic userName
-        setQuizzes(data!); // Assuming 'data' is an array of quizzes
+        // Fetch quizzes
+        const quizzesData = await getUserQuizzes(user.name);
+        setQuizzes(quizzesData);
+
+        // Fetch stats
+        const statsData = await getUserStats(user.name);
+        setStats(statsData);
       } catch (err: any) {
-        setError(err.message || "Failed to fetch quizzes");
+        setError(err.message || "Failed to fetch user data.");
       }
     };
 
-    fetchQuizzes();
+    fetchUserData();
   }, [user]); // Dependency array with 'user'
 
   const handleQuizClick = (quizId: number) => {
@@ -70,6 +83,7 @@ const Progress: React.FC = () => {
             </>
           )}
         </div>
+        <Sidebar></Sidebar>
       </Layout>
     </Container>
   );
