@@ -6,11 +6,18 @@ import { getUserQuizzes, getUserStats } from "../api/userApi";
 import { useUser } from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
-import Sidebar from "../comps/Sidebar";
+import StatsSidebar from "../comps/StatsSidebar"; // Correct case
 
 const Layout = styled.div`
   display: flex;
+  justify-content: space-between; /* Ensures space between the left sidebar and main content */
 `;
+
+const MainContent = styled.div`
+  flex-grow: 1; /* Ensures that the main content takes up the remaining space */
+  padding: 20px;
+`;
+
 interface Quiz {
   id: number;
   name: string;
@@ -61,7 +68,7 @@ const Progress: React.FC = () => {
       <Topheader />
       <Layout>
         <LeftSideBar />
-        <div>
+        <MainContent>
           {error ? (
             <div>Error: {error}</div>
           ) : (
@@ -82,7 +89,9 @@ const Progress: React.FC = () => {
               </ul>
             </>
           )}
-        </div>
+        </MainContent>
+
+        <StatsSidebar stats={stats} />
       </Layout>
     </Container>
   );
