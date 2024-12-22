@@ -269,13 +269,18 @@ app.get("/api/stats/:userName", async (req, res) => {
     const statsResult = await pool.query(
       `
       SELECT 
-        q.type AS question_type,
-        COUNT(q.id) AS total_questions,
-        SUM(CASE WHEN q.correct_index = aq.user_answer_index THEN 1 ELSE 0 END) AS correct_answers
-      FROM "Question" q
-      JOIN "Quiz" quiz ON q.quiz_id = quiz.id
-      WHERE quiz.user_id = $1
-      GROUP BY q.type
+    c.name AS question_type,
+    COUNT(q.id) AS total_questions,
+    SUM(CASE 
+        WHEN q.correct_index = q.user_answer_index THEN 1 
+        ELSE 0 
+    END) AS correct_answers
+    FROM "Question" q
+    JOIN "Quiz" quiz ON q.quiz_id = quiz.id
+    JOIN "Category" c ON q.category_id = c.id  
+    WHERE quiz.user_id = $1
+    GROUP BY c.name;  
+
       `,
       [userId]
     );

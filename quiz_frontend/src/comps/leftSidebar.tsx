@@ -6,6 +6,7 @@ import Sidebar from "./Sidebar";
 const SidebarLinks = styled.ul`
   list-style: none;
   padding: 0;
+  margin: 0;
 
   li {
     margin: 10px 0;
@@ -24,6 +25,7 @@ const NormalButton = styled.li`
   font-size: 1rem;
   transition: background-color 0.3s;
   text-align: left;
+
   &:hover {
     background-color: #575757;
   }
@@ -44,26 +46,17 @@ const LogoutButton = styled.li`
   }
 `;
 
-const LeftSideBar: React.FC<{ children?: React.ReactNode }> = ({
-  children,
-}) => {
+const LeftSideBar: React.FC = () => {
   const navigate = useNavigate();
 
-  const navToChallenge = () => {
-    navigate("/quiz");
-  };
-  const navToHome = () => {
-    navigate("/home");
-  };
-  const navToProgress = () => {
-    navigate("/progress");
-  };
+  const navToChallenge = () => navigate("/quiz");
+  const navToHome = () => navigate("/home");
+  const navToProgress = () => navigate("/progress");
 
   const handleLogout = () => {
     // Clear user authentication data which we might need
     localStorage.removeItem("authToken");
-
-    // Redirection to login
+    // Redirect to login
     window.location.href = "/";
   };
 

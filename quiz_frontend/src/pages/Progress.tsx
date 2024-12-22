@@ -83,7 +83,6 @@ const Progress: React.FC = () => {
             </>
           )}
         </div>
-        <Sidebar></Sidebar>
       </Layout>
     </Container>
   );
