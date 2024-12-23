@@ -231,7 +231,6 @@ app.get("/api/quiz/:quizId/questions", async (req, res) => {
   const { quizId } = req.params;
 
   try {
-    // Query to get all questions related to the quiz using quiz_id
     const result = await pool.query(
       'SELECT * FROM "Question" WHERE quiz_id = $1',
       [quizId]

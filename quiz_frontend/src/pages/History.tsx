@@ -8,26 +8,74 @@ import { useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
 import StatsSidebar from "../comps/StatsSidebar"; // Correct case
 
-const Layout = styled.div`
-  display: flex;
-  justify-content: space-between; /* Ensures space between the left sidebar and main content */
-`;
-
-const MainContent = styled.div`
-  flex-grow: 1; /* Ensures that the main content takes up the remaining space */
-  padding: 20px;
-`;
-
 interface Quiz {
   id: number;
   name: string;
   // Add other fields as necessary
 }
+
+const Layout = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
+const MainContent = styled.div`
+  flex-grow: 1;
+  padding: 20px;
+`;
+
+const QuizGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+`;
+
+const QuizCard = styled.div`
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  font-family: "Roboto", sans-serif;
+  font-size: 30px;
+
+  height: 90px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center; // Ensures quiz name is centered vertically and horizontally
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+  }
+
+  button {
+    width: 100%;
+    height: 100%;
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+  }
+`;
+
+const ErrorText = styled.div`
+  color: red;
+  font-weight: bold;
+  margin-top: 20px;
+`;
+
 const Progress: React.FC = () => {
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const { user } = useUser(); // Get user from context
-  const navigate = useNavigate(); // Hook to navigate to quiz question page
+  const { user } = useUser();
+  const navigate = useNavigate();
   const [stats, setStats] = useState<
     {
       question_type: string;
@@ -40,15 +88,13 @@ const Progress: React.FC = () => {
     const fetchUserData = async () => {
       if (!user) {
         setError("User not found.");
-        return; // Early return if user is null
+        return;
       }
 
       try {
-        // Fetch quizzes
         const quizzesData = await getUserQuizzes(user.name);
         setQuizzes(quizzesData);
 
-        // Fetch stats
         const statsData = await getUserStats(user.name);
         setStats(statsData);
       } catch (err: any) {
@@ -57,10 +103,10 @@ const Progress: React.FC = () => {
     };
 
     fetchUserData();
-  }, [user]); // Dependency array with 'user'
+  }, [user]);
 
   const handleQuizClick = (quizId: number) => {
-    navigate(`/quiz/${quizId}/questions`); // Navigate to the quiz's questions page
+    navigate(`/quiz/${quizId}/questions`);
   };
 
   return (
@@ -70,27 +116,27 @@ const Progress: React.FC = () => {
         <LeftSideBar />
         <MainContent>
           {error ? (
-            <div>Error: {error}</div>
+            <ErrorText>{error}</ErrorText>
           ) : (
             <>
               <h2>Your Quizzes</h2>
-              <ul>
-                {quizzes.length > 0 ? (
-                  quizzes.map((quiz) => (
-                    <li key={quiz.id}>
-                      <button onClick={() => handleQuizClick(quiz.id)}>
-                        {quiz.name}
-                      </button>
-                    </li>
-                  ))
-                ) : (
-                  <p>No quizzes found.</p>
-                )}
-              </ul>
+              {quizzes.length > 0 ? (
+                <QuizGrid>
+                  {quizzes.map((quiz) => (
+                    <QuizCard
+                      key={quiz.id}
+                      onClick={() => handleQuizClick(quiz.id)}
+                    >
+                      {quiz.name}
+                    </QuizCard>
+                  ))}
+                </QuizGrid>
+              ) : (
+                <p>No quizzes found.</p>
+              )}
             </>
           )}
         </MainContent>
-
         <StatsSidebar stats={stats} />
       </Layout>
     </Container>
