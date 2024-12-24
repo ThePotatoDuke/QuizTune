@@ -4,48 +4,48 @@ import token from "../pages/token.png";
 import { useUser } from "../context/UserContext";
 
 const Header = styled.header`
-  background-color: rgb(29, 29, 29);
-  padding: 20px;
-  color: white;
-  text-align: left;
-  font-size: 1.5rem;
-  align-items: center;
-  display: flex;
-  justify-content: space-between; /* Pushes the Profile to the right side*/
+	background-color: rgb(29, 29, 29);
+	padding: 20px;
+	color: white;
+	text-align: left;
+	font-size: 1.5rem;
+	align-items: center;
+	display: flex;
+	justify-content: space-between; /* Pushes the Profile to the right side*/
 `;
 
 const ProfileSection = styled.div`
-  display: flex;
-  align-items: center;
-  cursor: pointer;
+	display: flex;
+	align-items: center;
+	cursor: pointer;
 `;
 
 const ProfileImage = styled.img`
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  margin-right: 20px;
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	margin-right: 20px;
 `;
 
 const UserName = styled.span`
-  font-size: 1rem;
+	font-size: 1rem;
 `;
 
 const PointsSection = styled.div`
-  display: flex;
-  align-items: center;
-  margin-right: 25px;
+	display: flex;
+	align-items: center;
+	margin-right: 25px;
 `;
 
 const TokenImage = styled.img`
-  width: 20px;
-  height: 20px;
-  margin-right: 5px;
+	width: 20px;
+	height: 20px;
+	margin-right: 5px;
 `;
 
 const PointsText = styled.span`
-  font-size: 1rem;
-  color: yellow;
+	font-size: 1rem;
+	color: yellow;
 `;
 
 const Topheader: React.FC = () => {

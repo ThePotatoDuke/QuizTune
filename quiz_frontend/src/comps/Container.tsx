@@ -4,7 +4,7 @@ import styled from "styled-components";
 import background from "../pages/background.jpg";
 
 interface GradientContainerProps {
-    gradient: string; // Gradient string passed as a prop
+    gradient: string; // Gradient string is being passed as a prop
     children: React.ReactNode;
 }
 
