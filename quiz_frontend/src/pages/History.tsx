@@ -11,7 +11,6 @@ import StatsSidebar from "../comps/StatsSidebar"; // Correct case
 interface Quiz {
     id: number;
     name: string;
-    // Add other fields as necessary
 }
 
 const Layout = styled.div`
