@@ -38,7 +38,6 @@ const QuizCard = styled.div`
     padding: 20px;
     text-align: center;
     cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
     font-family: "Roboto", sans-serif;
     font-size: 30px;
 
@@ -47,10 +46,12 @@ const QuizCard = styled.div`
     display: flex;
     justify-content: center;
     align-items: center; // Ensures quiz name is centered vertically and horizontally
+    transition: all 0.5s ease;
 
     &:hover {
         transform: translateY(-5px);
         box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+        background-image: linear-gradient(rgb(17, 89, 138),rgb(5, 255, 243));
     }
 
     button {

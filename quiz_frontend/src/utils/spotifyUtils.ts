@@ -83,12 +83,26 @@ export function generateAnswerOptions(
   switch (questionType) {
     case "release_date":
       const correctYear = correctAnswer as number;
+
+      // Initialize options array with the correct year
+      let options1: number[] = [correctYear];
+
+
       options = [
-        correctYear,
-        correctYear - 1,
-        correctYear + 1,
-        correctYear + 2,
+        correctYear
       ];
+      for (let ctr = 0; ctr < 3; ctr++) {
+        let rand = Math.random();
+        if (rand < 0.5) {
+          let min = Math.min(...options1);
+          options1 = [...options1, min-1]; // Create a new array with the added value
+        }
+        else{
+          let max = Math.max(...options1);
+          options1 = [...options1, max+1]; // Create a new array with the added value
+        }
+        options=options1;
+      }
       break;
 
     case "artist":
