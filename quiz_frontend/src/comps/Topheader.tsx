@@ -49,25 +49,25 @@ const PointsText = styled.span`
 `;
 
 const Topheader: React.FC = () => {
-  const { user } = useUser(); // Access the user data from context
+	const { user } = useUser(); // Access the user data from context
 
-  if (!user) {
-    return <div>Loading...</div>; // Show a loading state if the user is not authenticated
-  }
+	if (!user) {
+		return <div>Loading...</div>; // Show a loading state if the user is not authenticated
+	}
 
-  return (
-    <Header>
-      <div>QuizTune</div>
-      <ProfileSection>
-        <PointsSection>
-          <TokenImage src={token} alt="Token" />
-          <PointsText>{user.points}</PointsText>
-        </PointsSection>
-        <ProfileImage src={user.avatar} alt="User Profile" />
-        <UserName>{user.name}</UserName>
-      </ProfileSection>
-    </Header>
-  );
+	return (
+		<Header>
+			<div>QuizTune</div>
+			<ProfileSection>
+				<PointsSection>
+					<TokenImage src={token} alt="Token" />
+					<PointsText>{user.points}</PointsText>
+				</PointsSection>
+				<ProfileImage src={user.avatar} alt="User Profile" />
+				<UserName>{user.name}</UserName>
+			</ProfileSection>
+		</Header>
+	);
 };
 
 export default Topheader;

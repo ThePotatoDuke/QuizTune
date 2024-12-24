@@ -29,37 +29,37 @@ const StatItem = styled.p`
 `;
 
 interface StatsSidebarProps {
-  stats: {
-    question_type: string;
-    total_questions: number;
-    correct_answers: number;
-  }[];
+	stats: {
+		question_type: string;
+		total_questions: number;
+		correct_answers: number;
+	}[];
 }
 const formatString = (str: string) => {
-  return str
-    .replace(/_/g, " ") // Replace underscores with spaces
-    .replace(/\b\w/g, (char) => char.toUpperCase()); // Capitalize the first letter of each word
+	return str
+		.replace(/_/g, " ") // Replace underscores with spaces
+		.replace(/\b\w/g, (char) => char.toUpperCase()); // Capitalize the first letter of each word
 };
 const StatsSidebar: React.FC<StatsSidebarProps> = ({ stats }) => {
-  return (
-    <StatsSidebarContainer>
-      <StatsTitle>Stats</StatsTitle>
-      <StatsContainer>
-        {" "}
-        {/* Use StatsContainer here to wrap stats content */}
-        {stats.length > 0 ? (
-          stats.map((stat, index) => (
-            <StatItem key={index}>
-              {formatString(stat.question_type)}: {stat.correct_answers}/
-              {stat.total_questions}
-            </StatItem>
-          ))
-        ) : (
-          <p>No stats available.</p>
-        )}
-      </StatsContainer>
-    </StatsSidebarContainer>
-  );
+	return (
+		<StatsSidebarContainer>
+			<StatsTitle>Stats</StatsTitle>
+			<StatsContainer>
+				{" "}
+				{/* Use StatsContainer here to wrap stats content */}
+				{stats.length > 0 ? (
+					stats.map((stat, index) => (
+						<StatItem key={index}>
+							{formatString(stat.question_type)}: {stat.correct_answers}/
+							{stat.total_questions}
+						</StatItem>
+					))
+				) : (
+					<p>No stats available.</p>
+				)}
+			</StatsContainer>
+		</StatsSidebarContainer>
+	);
 };
 
 export default StatsSidebar;

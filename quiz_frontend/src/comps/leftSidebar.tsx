@@ -47,28 +47,28 @@ const LogoutButton = styled.li`
 `;
 
 const LeftSideBar: React.FC = () => {
-  const navigate = useNavigate();
+	const navigate = useNavigate();
 
-  const navToChallenge = () => navigate("/quiz");
-  const navToHome = () => navigate("/home");
-  const navToProgress = () => navigate("/progress");
+	const navToChallenge = () => navigate("/quiz");
+	const navToHome = () => navigate("/home");
+	const navToProgress = () => navigate("/progress");
 
-  const handleLogout = () => {
-    // Clear user authentication data which we might need
-    localStorage.removeItem("authToken");
-    // Redirect to login
-    window.location.href = "/";
-  };
+	const handleLogout = () => {
+		// Clear user authentication data which we might need
+		localStorage.removeItem("authToken");
+		// Redirect to login
+		window.location.href = "/";
+	};
 
-  return (
-    <Sidebar>
-      <SidebarLinks>
-        <NormalButton onClick={navToHome}>Home</NormalButton>
-        <NormalButton onClick={navToProgress}>History</NormalButton>
-        <LogoutButton onClick={handleLogout}>Logout</LogoutButton>
-      </SidebarLinks>
-    </Sidebar>
-  );
+	return (
+		<Sidebar>
+			<SidebarLinks>
+				<NormalButton onClick={navToHome}>Home</NormalButton>
+				<NormalButton onClick={navToProgress}>History</NormalButton>
+				<LogoutButton onClick={handleLogout}>Logout</LogoutButton>
+			</SidebarLinks>
+		</Sidebar>
+	);
 };
 
 export default LeftSideBar;

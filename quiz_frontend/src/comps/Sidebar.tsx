@@ -13,11 +13,11 @@ const SidebarContainer = styled.nav`
 `;
 
 interface SidebarProps {
-  children: React.ReactNode; // Accepts any content inside the Sidebar
+	children: React.ReactNode; // Accepts any content inside the Sidebar
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ children }) => {
-  return <SidebarContainer>{children}</SidebarContainer>;
+	return <SidebarContainer>{children}</SidebarContainer>;
 };
 
 export default Sidebar;
