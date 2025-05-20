@@ -8,7 +8,6 @@
 - 🎧 **Personalized Quizzes** – Questions generated from your Spotify liked songs or top tracks  
 - 🧠 **Multiple Question Types** – Guess the song from popularity, album art,artist name or release year  
 - 🗂️ **User History** – Keep track of your past scores and performances *(if enabled)*  
-- 🌐 **Web-Based** – No installation needed, just log in and play
 
 ## 🖼️ Preview
 
